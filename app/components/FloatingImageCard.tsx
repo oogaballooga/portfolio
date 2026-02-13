@@ -3,11 +3,6 @@
 import { useEffect, useState } from 'react';
 import styles from './FloatingImageCard.module.css';
 
-interface FloatingImageCardProps {
-  images: string[];
-  interval?: number;
-}
-
 export default function FloatingImageCard({
   images,
   interval = 5000,

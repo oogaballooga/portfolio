@@ -1,0 +1,59 @@
+.scene {
+  perspective: 1200px;
+}
+
+.floatWrapper {
+  animation: float3d 10s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+.stopped {
+  animation: none !important;
+}
+
+.card {
+  border-radius: 16px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.4s ease, background-color 0.4s ease, width 0.4s ease, height 0.4s ease;
+}
+
+.hoverable:not(.active):hover {
+  background-color: #101010;
+  cursor: pointer;
+}
+
+.hoverable{
+  background-color: black;
+}
+
+.active {
+  background-color: #181818;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+@keyframes float3d {
+  0%     { transform: rotateX(0deg) rotateY(0deg) translateY(0); animation-timing-function: ease-out; }
+  14.3%  { transform: rotateX(-4deg) rotateY(4deg) translateY(-2px); animation-timing-function: ease-in-out; }
+  35.75% { transform: rotateX(6deg) rotateY(6deg) translateY(3px); animation-timing-function: ease-in-out; }
+  64.35% { transform: rotateX(-4deg) rotateY(-4deg) translateY(-3px); animation-timing-function: ease-in-out; }
+  85.8%  { transform: rotateX(4deg) rotateY(-4deg) translateY(-3px); animation-timing-function: ease-in; }
+}
