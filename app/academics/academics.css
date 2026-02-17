@@ -1,0 +1,31 @@
+.academics-container {
+  max-width: 1750px;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.academics-row {
+  display: grid;
+  grid-template-columns: 20% 80%;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #404040;
+  width: 100%;
+}
+
+.course-title {
+  font-weight: 800;
+  font-size: 1.25rem;
+  width: 250px;
+  color: #ffffff;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.course-desc {
+  color: #cfcfcf;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
