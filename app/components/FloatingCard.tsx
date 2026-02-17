@@ -27,7 +27,6 @@ export default function FloatingCard({
   hoverHighlight = false,
   isActive = false,
   onActivate,
-  onDeactivate,
   style,
 }: FloatingCardProps) {
 
@@ -46,25 +45,14 @@ export default function FloatingCard({
         <div 
           className={`${styles.card} ${hoverHighlight ? styles.hoverable : ''} ${isActive ? styles.active : ''}`}
           style={{
-            width: typeof width === 'number' ? `${width}px` : width,
-            height: typeof height === 'number' ? `${height}px` : height,
+            width: typeof currentWidth === 'number' ? `${currentWidth}px` : currentWidth,
+            height: typeof currentHeight === 'number' ? `${currentHeight}px` : currentHeight,
           }}
           onClick={(e) => {
             e.stopPropagation();
             if (!isActive) onActivate?.();
           }}
         >
-          {isActive && (
-            <button
-              className={styles.closeButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeactivate?.();
-              }}
-            >
-              ×
-            </button>
-          )}
           {children}
         </div>
       </div>

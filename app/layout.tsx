@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <nav className="navbar">
           <Link href="/" className={linkClass("/")}>Home</Link>
           <Link href="/academics" className={linkClass("/academics")}>Academics</Link>
-          <Link href="/internships" className={linkClass("/internships")}>Internships</Link>
+          <Link href="/experience" className={linkClass("/experience")}>Experience</Link>
           <Link href="/projects" className={linkClass("/projects")}>Projects</Link>
         </nav>
 
