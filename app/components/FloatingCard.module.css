@@ -5,6 +5,7 @@
 .floatWrapper {
   animation: float3d 10s ease-in-out infinite;
   transform-style: preserve-3d;
+  pointer-events: none; /* don't intercept — let events reach face children */
 }
 
 .stopped {
@@ -21,20 +22,8 @@
   align-items: center;
   justify-content: center;
 
-  transition: transform 0.4s ease, background-color 0.4s ease, width 0.4s ease, height 0.4s ease;
-}
-
-.hoverable:not(.active):hover {
-  background-color: #101010;
-  cursor: pointer;
-}
-
-.hoverable{
-  background-color: black;
-}
-
-.active {
-  background-color: #181818;
+  pointer-events: none; /* don't intercept — let events reach face children */
+  transition: transform 0.4s ease, width 0.4s ease, height 0.4s ease;
 }
 
 .closeButton {

@@ -1,0 +1,29 @@
+.flipCard {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+  position: relative;
+  transition: transform var(--flip-speed, 1s) ease-in-out;
+}
+
+.flipCard.flipped {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back {
+  transform: rotateY(180deg);
+}

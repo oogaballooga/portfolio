@@ -20,8 +20,8 @@ export default function FloatingFlipCard({
   width = 320,
   height = 420,
   floatSpeed = 10,
-  flipSpeed = 1,
-  flipInterval = 5000,
+  flipSpeed = 0.75,
+  flipInterval = 7500,
 }: FloatingFlipCardProps) {
   const [flipping, setFlipping] = useState(false);
   const [front, setFront] = useState(content[0]);
