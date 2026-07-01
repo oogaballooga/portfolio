@@ -1,32 +1,33 @@
-"use client";
+'use client';
 
-import { useRef, useState, useLayoutEffect, CSSProperties } from 'react';
-import "./CourseCard.css";
+import { useRef, useState, useLayoutEffect } from 'react';
+import './CourseCard.css';
 
-type Props = {
-  id: number;
+interface CourseCardProps {
+  id: string;
   title: string;
   description: string;
   width?: number;
   height?: number;
-  activeWidth?: number;
-  isActive?: boolean;
-  onActivate?: () => void;
-  style?: CSSProperties;
-};
+  isActive: boolean;
+  zIndex: number;
+  onActivate: () => void;
+  onDeactivate: () => void;
+}
 
 export default function CourseCard({
   title,
   description,
-  width = 250,
+  width = 280,
   height = 100,
-  activeWidth = 420,
-  isActive = false,
+  isActive,
+  zIndex,
   onActivate,
-  style,
-}: Props) {
-  const titleRef = useRef<HTMLDivElement>(null);
+}: CourseCardProps) {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
   const [titleWidth, setTitleWidth] = useState(0);
+  const [activeWidth, setActiveWidth] = useState(700);
 
   useLayoutEffect(() => {
     if (titleRef.current) {
@@ -34,60 +35,81 @@ export default function CourseCard({
     }
   }, [title]);
 
+  useLayoutEffect(() => {
+    if (isActive && descRef.current) {
+      const descWidth = descRef.current.scrollWidth;
+      const neededWidth = titleWidth + 31 + descWidth + 50;
+      setActiveWidth(Math.max(700, Math.min(neededWidth, 900)));
+    }
+  }, [isActive, titleWidth, description]);
+
   const cardPadding = 25;
-  const lineMargin = 15; // margin on each side of the vertical line when active
+  const lineMargin = 15;
   const lineWidth = 1;
-  const activeLine = lineWidth + lineMargin * 2; // 31px total
+  const activeLine = lineWidth + lineMargin * 2;
 
-  // When inactive: center the title in the card
   const contentWidth = width - cardPadding * 2;
-  const centerOffset = (contentWidth / 2) - (titleWidth / 2);
-  const titleTransform = isActive ? 'translateX(0)' : `translateX(${centerOffset}px)`;
+  const centerOffset = contentWidth / 2 - titleWidth / 2;
+  const titleTransform = isActive
+    ? 'translateX(0)'
+    : `translateX(${centerOffset}px)`;
 
-  // Description area width when active
-  const descriptionWidth = activeWidth - cardPadding * 2 - titleWidth - activeLine;
+  const descriptionWidth =
+    activeWidth - cardPadding * 2 - titleWidth - activeLine;
 
-  const inactiveLineGroupMargin = contentWidth - (lineMargin + lineWidth) - titleWidth;
+  const inactiveLineGroupMargin =
+    contentWidth - (lineMargin + lineWidth) - titleWidth;
   const lineGroupMarginLeft = isActive ? 0 : inactiveLineGroupMargin;
 
   return (
-    <div style={{ width, height, position: 'relative' }}>
+    <div
+      style={{
+        width: isActive ? activeWidth : width,
+        height,
+        position: 'relative',
+        zIndex,
+      }}
+    >
       <div
-        className={`course-card ${isActive ? "active" : ""}`}
+        className={`course-card ${isActive ? 'active' : ''}`}
         style={{
-          ...style,
           width: isActive ? activeWidth : width,
           height,
         }}
+        role="button"
+        tabIndex={0}
         onClick={(e) => {
           e.stopPropagation();
-          onActivate?.();
+          onActivate();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onActivate();
+          }
         }}
       >
-        {/* Title — transforms to center when inactive */}
         <div
-          ref={titleRef}
           className="title-wrapper"
           style={{ transform: titleTransform }}
         >
-          <h3>{title}</h3>
+          <h3 ref={titleRef}>{title}</h3>
         </div>
 
-        {/* Line + description group — slides to right edge when inactive */}
         <div
           className="line-description-group"
           style={{ marginLeft: lineGroupMarginLeft }}
         >
-          <div
-            className="vertical-line"
-          />
-
+          <div className="vertical-line" />
           <div
             className="description-area"
             style={{ width: isActive ? descriptionWidth : 0 }}
           >
-            <div className="description-text" style={{ width: descriptionWidth }}>
-              <p>{description}</p>
+            <div
+              className="description-text"
+              style={{ width: descriptionWidth }}
+            >
+              <p ref={descRef}>{description}</p>
             </div>
           </div>
         </div>

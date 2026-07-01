@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useRef, ReactNode } from 'react';
-import FloatingCard from './FloatingCard';
 import styles from './FloatingFlipCard.module.css';
 
 type ContentItem = string | ReactNode;
@@ -20,8 +19,8 @@ export default function FloatingFlipCard({
   width = 320,
   height = 420,
   floatSpeed = 10,
-  flipSpeed = 0.75,
-  flipInterval = 7500,
+  flipSpeed = 1,
+  flipInterval = 20000, // 1/1000 of a second
 }: FloatingFlipCardProps) {
   const [flipping, setFlipping] = useState(false);
   const [front, setFront] = useState(content[0]);
@@ -52,20 +51,27 @@ export default function FloatingFlipCard({
   };
 
   return (
-    <FloatingCard width={width} height={height} floatSpeed={floatSpeed}>
+    <div className={styles.scene}>
       <div 
-        className={`${styles.flipCard} ${flipping ? styles.flipped : ''}`}
-        style={{
-          '--flip-speed': `${flipSpeed}s`,
-        } as React.CSSProperties}
+        className={styles.floatWrapper}
+        style={{ animationDuration: `${floatSpeed}s` }}
       >
-        <div className={styles.face}>
-          {renderContent(front)}
-        </div>
-        <div className={`${styles.face} ${styles.back}`}>
-          {renderContent(back)}
+        <div style={{ width: `${width}px`, height: `${height}px` }}>
+          <div 
+            className={`${styles.flipCard} ${flipping ? styles.flipped : ''}`}
+            style={{
+              '--flip-speed': `${flipSpeed}s`,
+            } as React.CSSProperties}
+          >
+            <div className={styles.face}>
+              {renderContent(front)}
+            </div>
+            <div className={`${styles.face} ${styles.back}`}>
+              {renderContent(back)}
+            </div>
+          </div>
         </div>
       </div>
-    </FloatingCard>
+    </div>
   );
 }

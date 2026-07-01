@@ -1,0 +1,142 @@
+:root {
+  --camera-perspective: 1200px;
+  --page-height: 100vh;
+  --transition-duration: 0.6s;
+  --transition-duration-distant: 0.9s;
+  --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Camera container: fixed viewport with 3D perspective */
+.camera-container {
+  position: fixed;
+  inset: 0;
+  perspective: var(--camera-perspective);
+  perspective-origin: center center;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* The camera view translates along Y to move between pages */
+.camera-view {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Each page shell: positioned at its Y offset in the stack */
+.page-shell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--page-height);
+  overflow-y: auto;
+}
+
+/* Ghost pages: lightweight placeholders for distant fly-throughs */
+.ghost-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--page-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  opacity: 0.4;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ghost-page-label {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Shared flip card styles (consolidated from FlippableCard.module.css and FloatingFlipCard.module.css) */
+.flip-card {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+  position: relative;
+}
+
+.flip-card.flipped {
+  transition: transform var(--flip-speed, 0.5s) ease-in-out;
+  transform: rotateY(180deg);
+}
+
+.flip-card .face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flip-card .face.back {
+  transform: rotateY(180deg);
+}
+
+/* Floating animation (ambient, non-interactive) */
+@keyframes float3d {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg) translateY(0);
+    animation-timing-function: ease-out;
+  }
+  14.3% {
+    transform: rotateX(-4deg) rotateY(4deg) translateY(-2px);
+    animation-timing-function: ease-in-out;
+  }
+  35.75% {
+    transform: rotateX(6deg) rotateY(6deg) translateY(3px);
+    animation-timing-function: ease-in-out;
+  }
+  64.35% {
+    transform: rotateX(-4deg) rotateY(-4deg) translateY(-3px);
+    animation-timing-function: ease-in-out;
+  }
+  85.8% {
+    transform: rotateX(4deg) rotateY(-4deg) translateY(-3px);
+    animation-timing-function: ease-in;
+  }
+}
+
+.float-wrapper {
+  animation: float3d 10s ease-in-out infinite;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+/* Reduced motion: disable all 3D and animations */
+@media (prefers-reduced-motion: reduce) {
+  .camera-view {
+    transition: none !important;
+  }
+
+  .ghost-page {
+    display: none !important;
+  }
+
+  .flip-card.flipped {
+    transition: none !important;
+  }
+
+  .float-wrapper {
+    animation: none !important;
+  }
+
+  .page-shell {
+    transition: none !important;
+  }
+}
