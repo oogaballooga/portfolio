@@ -1,18 +1,16 @@
 'use client';
 
 import { CSSProperties, ReactNode, useState, useEffect } from 'react';
-import FloatingCard from './FloatingCard';
 import styles from './FlippableCard.module.css';
 
-interface FloatingClickCardProps {
+interface ProjectCardProps {
   id: number;
   restTop: string;
   restLeft: string;
-  width?: number; // Changed to number for easier math, or handle strings carefully
+  width?: number;
   height?: number;
   activeWidth?: number;
   activeHeight?: number;
-  floatSpeed?: number;
   flipSpeed?: number;
   inactiveContent: ReactNode;
   activeContent: ReactNode;
@@ -23,14 +21,13 @@ interface FloatingClickCardProps {
   disabled?: boolean;
 }
 
-export default function FloatingClickCard({
+export default function ProjectCard({
   restTop,
   restLeft,
-  width = 320,
-  height = 420,
-  activeWidth = 600, // Explicitly default these for calculations
-  activeHeight = 800,
-  floatSpeed = 20,
+  width = 700,
+  height = 300,
+  activeWidth = 1000, 
+  activeHeight = 1000,
   flipSpeed = 0.5,
   inactiveContent,
   activeContent,
@@ -39,7 +36,7 @@ export default function FloatingClickCard({
   onDeactivate,
   style,
   disabled = false,
-}: FloatingClickCardProps) {
+}: ProjectCardProps) {
   const [flipped, setFlipped] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -56,25 +53,23 @@ export default function FloatingClickCard({
   const backBg = '#181818';
 
   return (
-    <FloatingCard
+    <div
       style={{
         position: 'fixed',
         top: isActive ? '50%' : restTop,
         left: isActive ? '50%' : restLeft,
         transform: 'translate(-50%, -50%)',
-        transition: 'top 0.4s ease, left 0.4s ease',
+        transition: 'top 0.4s ease, left 0.4s ease, width 0.4s ease, height 0.4s ease',
+        width: `${isActive ? activeWidth : width}px`,
+        height: `${isActive ? activeHeight : height}px`,
         pointerEvents: disabled ? 'none' : 'auto',
+        perspective: '1200px', // Added perspective here since we removed the FloatingCard wrapper
         ...style,
       }}
-      width={width}
-      height={height}
-      activeWidth={activeWidth}
-      activeHeight={activeHeight}
-      floatSpeed={floatSpeed}
-      isActive={isActive}
-      hoverHighlight={false}
-      onActivate={onActivate}
-      onDeactivate={onDeactivate}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (!isActive) onActivate();
+      }}
     >
       <div
         className={`${styles.flipCard} ${flipped ? styles.flipped : ''}`}
@@ -89,7 +84,6 @@ export default function FloatingClickCard({
               cursor: isActive ? 'default' : 'pointer',
               transition: 'background-color 0.4s ease',
               pointerEvents: 'auto',
-              // LOCK THE SIZE HERE:
               width: `${width}px`,
               height: `${height}px`,
             }}
@@ -107,7 +101,6 @@ export default function FloatingClickCard({
             style={{ 
               backgroundColor: backBg, 
               pointerEvents: 'auto',
-              // LOCK THE SIZE HERE:
               width: `${activeWidth}px`,
               height: `${activeHeight}px`,
             }}
@@ -118,25 +111,13 @@ export default function FloatingClickCard({
                 e.stopPropagation();
                 onDeactivate();
               }}
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                zIndex: 10, // Ensure it stays on top
-                background: 'black',
-                color: 'white',
-                border: 'none',
-                borderRadius: '50%',
-                width: 28,
-                height: 28,
-                cursor: 'pointer',
-              }}
+              className="absolute top-4 right-4 bg-black text-white border-none rounded-full w-8 h-8 cursor-pointer z-10 flex items-center justify-center hover:bg-gray-800 transition-colors"
             >
               ✕
             </button>
           </div>
         </div>
       </div>
-    </FloatingCard>
+    </div>
   );
 }

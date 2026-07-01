@@ -1,35 +1,32 @@
-/* Fixed Grid Logic */
 .course-grid {
   display: grid;
-  grid-template-columns: repeat(3, 220px);
-  grid-template-rows: repeat(4, 100px);
-  gap: 100px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px;
   position: relative;
 }
 
-/* Card base */
 .course-card {
   background-color: black;
   color: white;
   border-radius: 12px;
   padding: 25px;
   cursor: pointer;
-  position: absolute;
+  position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   box-sizing: border-box;
   border: 2px solid #222222;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              scale 0.4s ease,
-              background-color 0.4s ease;
+  transition:
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.4s ease;
 }
 
 .course-card.active {
   background-color: #181818;
   border: 2px solid #333;
-  scale: 1.1;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+  overflow: visible;
 }
 
 .course-card:not(.active):hover {
@@ -46,27 +43,27 @@
 
 .course-card h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   white-space: nowrap;
 }
 
-/* Wrapper that keeps the line + description together and slides as a unit */
 .line-description-group {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  align-self: stretch; /* inherit the card's full height so the line's 60% resolves correctly */
+  align-self: stretch;
   transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .vertical-line {
-  width: 0px;
-  height: 0%;
+  width: 0;
+  height: 0;
   background: #555;
   flex-shrink: 0;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
-              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
-              height 0.3s ease 0.25s;
+  transition:
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
+    margin 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
+    height 0.3s ease 0.25s;
   margin: 0;
   overflow: hidden;
 }
@@ -81,8 +78,9 @@
   opacity: 0;
   width: 0;
   overflow: hidden;
-  transition: opacity 0.4s ease 0.25s,
-              width 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  transition:
+    opacity 0.4s ease 0.25s,
+    width 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
   flex-shrink: 0;
 }
 
@@ -91,9 +89,10 @@
 }
 
 .description-text {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #d1d5dc;
   white-space: normal;
+  line-height: 1.5;
 }
 
 .description-text p {
