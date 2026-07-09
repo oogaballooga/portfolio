@@ -3,11 +3,11 @@ import type { SkillCategory } from '../types/content';
 export const skills: SkillCategory[] = [
   {
     category: 'Languages',
-    items: ['TypeScript', 'JavaScript', 'Python', 'C#', 'C++', 'Dart', 'SQL'],
+    items: ['TypeScript', 'C#', 'Dart', 'Python', 'JavaScript', 'C++', 'SQL'],
   },
   {
     category: 'Frameworks',
-    items: ['React', 'Next.js', 'Flutter', 'Node.js', 'Tailwind CSS'],
+    items: ['React', 'Next.js', 'Flutter', 'Node.js', 'Tailwind CSS', 'Godot'],
   },
   {
     category: 'Tools',
@@ -16,13 +16,12 @@ export const skills: SkillCategory[] = [
   {
     category: 'Concepts',
     items: [
-      'Data Structures',
-      'Algorithms',
       'OOP',
       'Agile',
       'CI/CD',
-      'REST APIs',
+      'Agentic Programming',
       'Database Design',
+      'REST APIs',
     ],
   },
   {
@@ -32,6 +31,7 @@ export const skills: SkillCategory[] = [
       '3D Web Graphics',
       'AI/ML Integration',
       'Computer Vision',
+      'Cline',
     ],
   },
 ];
