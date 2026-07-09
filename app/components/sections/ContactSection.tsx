@@ -1,9 +1,9 @@
 import FloatingFlipCard from '../FloatingFlipCard';
 
 const PFP_IMAGES = [
-  '/images/pfp/image.jpg',
-  '/images/pfp/image1.jpg',
-  '/images/pfp/image2.jpg',
+  '/images/pfp/image.webp',
+  '/images/pfp/image1.webp',
+  '/images/pfp/image2.webp',
 ];
 
 export default function ContactSection() {

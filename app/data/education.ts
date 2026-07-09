@@ -8,7 +8,7 @@ export const education: Education = {
   startDate: 'Jan 2026',
   endDate: 'Dec 2026',
   gpa: 4.0,
-  logo: 'images/seattleuCrest.png',
+  logo: 'images/seattleuCrest.webp',
   courses: [
     {
       id: 'machine-learning',
@@ -106,6 +106,6 @@ export const bachelorsEducation: Education = {
   endDate: 'Dec 2025',
   gpa: 3.8,
   honors: ["6x Quarterly Dean's List"],
-  logo: 'images/seattleuCrest.png',
+  logo: 'images/seattleuCrest.webp',
   courses: [],
 };
