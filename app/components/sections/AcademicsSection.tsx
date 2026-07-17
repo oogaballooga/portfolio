@@ -58,7 +58,8 @@ export default function AcademicsSection() {
         </div>
 
         {/* Relevant Courses */}
-        <h2 className="text-2xl font-bold mb-8">Relevant Courses</h2>
+        <h2 className="text-2xl font-bold mb-2">Relevant Courses</h2>
+        <p className="text-gray-500 text-sm mb-6">Click courses for more information</p>
         <div className="course-grid">
           {courses.map((course) => {
             const { isActive, zIndex, onActivate } = getCardProps(course.id);
