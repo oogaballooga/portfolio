@@ -80,7 +80,14 @@ export function useCameraController(
   const cameraY = useMotionValue(initialY);
   const cameraYSpring = useSpring(cameraY, SPRING_CONFIG);
   const isNavigating = useRef(false);
+  const navigationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isZoomingRef = useRef(false);
+
+  // Debounce window before allowing the next navigation.
+  // Prevents accidental multi-page jumps from a single scroll gesture,
+  // but lets the user scroll quickly between pages since Framer Motion
+  // springs handle mid-flight target redirection smoothly.
+  const NAVIGATION_DEBOUNCE_MS = 200;
 
   // On mount, jump to the correct page from the URL hash (before paint, no animation)
   useLayoutEffect(() => {
@@ -105,6 +112,14 @@ export function useCameraController(
       const targetY = -targetSlot.yIndex * window.innerHeight;
 
       isNavigating.current = true;
+      if (navigationTimeoutRef.current !== null) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+      navigationTimeoutRef.current = setTimeout(() => {
+        isNavigating.current = false;
+        navigationTimeoutRef.current = null;
+      }, NAVIGATION_DEBOUNCE_MS);
+
       currentPageRef.current = target;
       setDirection(config.direction);
 
@@ -122,13 +137,15 @@ export function useCameraController(
         history.replaceState(null, '', hash || window.location.pathname);
       }
 
-      const duration = config.duration * 1000 + 200;
+      // Ghost pages and transition state remain until the camera
+      // spring visually settles so that fly-through placeholders
+      // and UI overlays stay in sync with the animation.
+      const visualDuration = config.duration * 1000 + 200;
       setTimeout(() => {
         setIsTransitioning(false);
         setDirection('none');
         setGhostPages([]);
-        isNavigating.current = false;
-      }, duration);
+      }, visualDuration);
     },
     [cameraY]
   );
