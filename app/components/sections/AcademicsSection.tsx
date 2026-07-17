@@ -42,6 +42,7 @@ export default function AcademicsSection() {
             gpa={mastersEducation.gpa}
             honors={mastersEducation.honors}
             logo={mastersEducation.logo}
+            variant="highlight"
           />
           <DegreeCard
             degree={bachelorsEducation.degree}
