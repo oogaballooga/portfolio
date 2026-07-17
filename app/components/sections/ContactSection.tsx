@@ -3,7 +3,6 @@ import FloatingFlipCard from '../FloatingFlipCard';
 const PFP_IMAGES = [
   '/images/pfp/image.webp',
   '/images/pfp/image1.webp',
-  '/images/pfp/image2.webp',
 ];
 
 export default function ContactSection() {
@@ -19,10 +18,10 @@ export default function ContactSection() {
               <br />
               Oscar Eriksen
             </h1>
-            <p className="mt-6 text-lg md:text-xl text-gray-400 max-w-xl">
+            <p className="mt-10 text-lg md:text-xl text-gray-400 max-w-sm">
               M.S. Computer Science graduate student at Seattle University.
             </p>
-            <div className="mt-8 flex gap-4">
+            <div className="mt-10 flex gap-4">
               <a
                 href="mailto:erikseno@seattleu.edu"
                 className="text-gray-300 hover:text-white transition-colors underline"
@@ -30,7 +29,7 @@ export default function ContactSection() {
                 Email
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://linkedin.com/in/ooga"
                 className="text-gray-300 hover:text-white transition-colors underline"
               >
                 LinkedIn

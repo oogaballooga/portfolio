@@ -33,6 +33,7 @@
   width: 100%;
   height: var(--page-height);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Ghost pages: lightweight placeholders for distant fly-throughs */
@@ -116,6 +117,13 @@
   animation: float3d 10s ease-in-out infinite;
   transform-style: preserve-3d;
   pointer-events: none;
+}
+
+/* Ctrl+scroll zoom: temporarily disable scrolling on page shells
+   and card panels so the compositor has no overflow to reposition. */
+body.ctrl-zoom-active .page-shell,
+body.ctrl-zoom-active .card-panel {
+  overflow-y: hidden !important;
 }
 
 /* Reduced motion: disable all 3D and animations */

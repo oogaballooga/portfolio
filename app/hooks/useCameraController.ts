@@ -80,6 +80,7 @@ export function useCameraController(
   const cameraY = useMotionValue(initialY);
   const cameraYSpring = useSpring(cameraY, SPRING_CONFIG);
   const isNavigating = useRef(false);
+  const isZoomingRef = useRef(false);
 
   // On mount, jump to the correct page from the URL hash (before paint, no animation)
   useLayoutEffect(() => {
@@ -148,9 +149,56 @@ export function useCameraController(
     return () => window.removeEventListener('hashchange', onHashChange);
   }, [navigateTo]);
 
+  // Track whether the user is holding Ctrl/Meta for zoom.
+  // When zooming, resize events fire on every tick — we use this
+  // to recalibrate the camera position so it stays centered on the
+  // current page while vh units recompute during viewport changes.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        isZoomingRef.current = true;
+      }
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        isZoomingRef.current = false;
+      }
+    };
+    const onBlur = () => {
+      isZoomingRef.current = false;
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener('blur', onBlur);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('blur', onBlur);
+    };
+  }, []);
+
+  // During zoom: recalibrate camera position on every resize tick.
+  // cameraY (MotionValue) is set directly — no spring animation,
+  // no navigateTo — just instant pixel alignment with current vh.
+  useEffect(() => {
+    const onResize = () => {
+      if (!isZoomingRef.current) return;
+      const current = currentPageRef.current;
+      const targetY = -getPageSlot(current).yIndex * window.innerHeight;
+      cameraY.set(targetY);
+      cameraYSpring.set(targetY);
+    };
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [cameraY, cameraYSpring]);
+
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       if (isNavigating.current) return;
+      // Don't navigate when user is zooming (Ctrl/Cmd + scroll)
+      if (e.ctrlKey || e.metaKey) return;
 
       const current = currentPageRef.current;
       const currentSlot = getPageSlot(current);

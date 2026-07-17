@@ -36,7 +36,6 @@ export interface Education {
   gpa: number;
   honors?: string[];
   logo?: string;
-  courses: Course[];
 }
 
 // Course data
