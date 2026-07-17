@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useCallback, useRef } from 'react';
+import { type ReactNode, useCallback, useRef, useEffect } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { CameraProvider } from './CameraContext';
 import { useCameraController } from '../hooks/useCameraController';
@@ -69,6 +69,34 @@ export default function CameraSystem({ children }: CameraSystemProps) {
     },
     []
   );
+
+  // When user holds Ctrl/Meta (for zoom), temporarily disable scrolling
+  // on all page shells and card panels so the browser's compositor
+  // has no overflow to reposition. Zoom operates above DOM propagation.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        document.body.classList.add('ctrl-zoom-active');
+      }
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') {
+        document.body.classList.remove('ctrl-zoom-active');
+      }
+    };
+    const onBlur = () => {
+      document.body.classList.remove('ctrl-zoom-active');
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener('blur', onBlur);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('blur', onBlur);
+    };
+  }, []);
 
   return (
     <CameraProvider

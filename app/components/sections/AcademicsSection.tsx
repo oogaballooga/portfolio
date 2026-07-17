@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect } from 'react';
-import { education, bachelorsEducation } from '../../data/education';
+import { mastersEducation, bachelorsEducation, courses } from '../../data/education';
 import DegreeCard from '../DegreeCard';
 import CourseCard from '../CourseCard';
 import { formatDateRange } from '../../lib/formatting';
@@ -10,7 +10,6 @@ import { useCameraContext } from '../CameraContext';
 import '../CourseCard.css';
 
 export default function AcademicsSection() {
-  const courses = education.courses;
   const { getCardProps, deactivateAll } = useCourseCardStack();
   const { currentPage } = useCameraContext();
 
@@ -31,17 +30,18 @@ export default function AcademicsSection() {
       className="relative w-full min-h-screen text-white"
       onClick={handleBackgroundClick}
     >
-      <div className="max-w-7xl mx-auto px-8 pt-24 pb-16">
+      <div className="max-w-[90rem] mx-auto px-8 pt-24 pb-16">
         <h2 className="text-2xl font-bold mb-8">Degrees</h2>
 
         {/* Degree Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,670px))] justify-center gap-8 mb-20">
           <DegreeCard
-            degree={education.degree}
-            school={education.school}
-            dates={formatDateRange(education.startDate, education.endDate)}
-            gpa={education.gpa}
-            logo={education.logo}
+            degree={mastersEducation.degree}
+            school={mastersEducation.school}
+            dates={formatDateRange(mastersEducation.startDate, mastersEducation.endDate)}
+            gpa={mastersEducation.gpa}
+            honors={mastersEducation.honors}
+            logo={mastersEducation.logo}
           />
           <DegreeCard
             degree={bachelorsEducation.degree}

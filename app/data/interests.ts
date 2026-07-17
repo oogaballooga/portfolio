@@ -149,7 +149,7 @@ export const interests: InterestCategory[] = [
       },
       {
         id: 'pokelawls',
-        name: 'PokeLawls',
+        name: 'Pokelawls',
         image: '/images/carousels/contentCreators/pokelawls.webp',
       },
       {
