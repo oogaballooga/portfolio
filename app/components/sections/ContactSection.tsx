@@ -21,7 +21,7 @@ export default function ContactSection() {
             <p className="mt-10 text-lg md:text-xl text-gray-400 max-w-sm">
               M.S. Computer Science graduate student at Seattle University.
             </p>
-            <div className="mt-10 flex gap-4">
+            <div className="mt-10 flex gap-4 text-lg md:text-xl">
               <a
                 href="mailto:erikseno@seattleu.edu"
                 className="text-gray-300 hover:text-white transition-colors underline"

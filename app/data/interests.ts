@@ -82,24 +82,24 @@ export const interests: InterestCategory[] = [
         image: '/images/carousels/games/celeste.webp',
       },
       {
-        id: 'cod-bo3',
-        name: 'Call of Duty: Black Ops 3',
-        image: '/images/carousels/games/codbo3.webp',
-      },
-      {
         id: 'doom-eternal',
         name: 'Doom Eternal',
         image: '/images/carousels/games/doometernal.webp',
       },
       {
+        id: 'silksong',
+        name: 'Silksong',
+        image: '/images/carousels/games/silksong.webp',
+      },
+      {
+        id: 'cod-bo3',
+        name: 'Call of Duty: Black Ops 3',
+        image: '/images/carousels/games/codbo3.webp',
+      },
+      {
         id: 'inscryption',
         name: 'Inscryption',
         image: '/images/carousels/games/inscryption.webp',
-      },
-      {
-        id: 'silksong',
-        name: 'Hollow Knight: Silksong',
-        image: '/images/carousels/games/silksong.webp',
       },
       {
         id: 'skyrim',
@@ -118,7 +118,7 @@ export const interests: InterestCategory[] = [
       },
       {
         id: 'zelda-botw',
-        name: 'The Legend of Zelda: Breath of the Wild',
+        name: 'Zelda: Breath of the Wild',
         image: '/images/carousels/games/zeldabreathofthewild.webp',
       },
     ],
@@ -127,6 +127,21 @@ export const interests: InterestCategory[] = [
     id: 'creators',
     title: 'Favorite Content Creators',
     items: [
+      {
+        id: 'xqc',
+        name: 'xQc',
+        image: '/images/carousels/contentCreators/xqc.webp',
+      },
+      {
+        id: 'pewdiepie',
+        name: 'PewDiePie',
+        image: '/images/carousels/contentCreators/pewdiepie.webp',
+      },
+      {
+        id: 'optimum',
+        name: 'Optimum',
+        image: '/images/carousels/contentCreators/optimum.webp',
+      },
       {
         id: 'hank-green',
         name: 'Hank Green',
@@ -138,24 +153,9 @@ export const interests: InterestCategory[] = [
         image: '/images/carousels/contentCreators/kurzgesagt.webp',
       },
       {
-        id: 'optimum',
-        name: 'Optimum',
-        image: '/images/carousels/contentCreators/optimum.webp',
-      },
-      {
-        id: 'pewdiepie',
-        name: 'PewDiePie',
-        image: '/images/carousels/contentCreators/pewdiepie.webp',
-      },
-      {
         id: 'pokelawls',
         name: 'Pokelawls',
         image: '/images/carousels/contentCreators/pokelawls.webp',
-      },
-      {
-        id: 'xqc',
-        name: 'xQc',
-        image: '/images/carousels/contentCreators/xqc.webp',
       },
     ],
   },
