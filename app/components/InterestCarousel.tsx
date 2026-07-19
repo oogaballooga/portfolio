@@ -93,7 +93,7 @@ export default function InterestCarousel({ category }: InterestCarouselProps) {
         {/* Left arrow */}
         <button
           onClick={handlePrev}
-          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors"
+          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors cursor-pointer"
           aria-label={`Previous ${title}`}
         >
           ‹
@@ -135,7 +135,7 @@ export default function InterestCarousel({ category }: InterestCarouselProps) {
         {/* Right arrow */}
         <button
           onClick={handleNext}
-          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors"
+          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors cursor-pointer"
           aria-label={`Next ${title}`}
         >
           ›
