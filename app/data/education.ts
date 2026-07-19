@@ -20,7 +20,7 @@ export const bachelorsEducation: Education = {
   startDate: 'Sept 2023',
   endDate: 'Dec 2025',
   gpa: 3.8,
-  honors: ["6x Quarterly Dean's List"],
+  honors: ["6x Quarterly Dean's List", "Magna Cum Laude"],
   logo: 'images/seattleuCrest.webp',
 };
 
