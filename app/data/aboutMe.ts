@@ -1,8 +1,9 @@
 export const personalText = 
-`I am 21 years old and have spent nearly all of my life in Washington state. 
-I have many hobbies, including gaming, gymming, soccer, playing the guitar, 
-listening to music, spending time with friends, and watching twitch/youtube 
-to name a few.`;
+`I am 21 years old and have lived nearly all of my life in Washington state. 
+I have many hobbies, including gaming, soccer, guitar, working out, 
+listening to music, spending time with friends, watching twitch/youtube,
+and coding games or projects. I am curious and observant; I enjoy quietly 
+learning new things and exploring new ideas.`;
 
 export const professionalText = 
 `My introduction to programming began in high school, where I learned Unity 

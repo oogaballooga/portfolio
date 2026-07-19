@@ -19,7 +19,8 @@
   border: 2px solid #222222;
   transition:
     width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.4s ease;
+    background-color 0.4s ease,
+    border-color 0.4s ease;
 }
 
 .course-card.active {
@@ -31,6 +32,7 @@
 
 .course-card:not(.active):hover {
   background-color: #222222;
+  border: 2px solid #444;
 }
 
 .title-wrapper {
