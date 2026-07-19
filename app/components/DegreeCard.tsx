@@ -36,9 +36,11 @@ export default function DegreeCard({
             GPA: {gpa}
           </p>
           {honors && honors.length > 0 && (
-            <p className="text-gray-400 text-sm sm:text-base md:text-lg mt-1 sm:mt-2">
-              {honors.join(' · ')}
-            </p>
+            <div className="text-gray-400 text-sm sm:text-base md:text-md mt-1 sm:mt-2">
+              {honors.map((honor) => (
+                <p key={honor}>{honor}</p>
+              ))}
+            </div>
           )}
         </div>
         {logo && (
