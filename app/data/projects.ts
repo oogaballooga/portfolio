@@ -8,7 +8,7 @@ export const projects: Project[] = [
     shortDescription:
       'Capstone project: a mobile app built for a local company to reduce fabric waste.',
     description:
-      'Designed and developed a full-stack mobile application from scratch for a local business. The app helps the company track fabric inventory, reduce material waste, and streamline order processing. Worked in an Agile team of four, communicating directly with the business sponsor throughout the semester.',
+      'Designed and developed a full-stack mobile application from scratch for a local business. The app helps artists keep track of their fabric inventory, which in turn reduces material waste, and helps artists manage their projects more efficiently. Worked in an Agile team of four, communicating directly with the business sponsor throughout the semester.',
     skills: [
       'Architecture design',
       'DevOps',
@@ -18,6 +18,20 @@ export const projects: Project[] = [
     tech: ['Flutter', 'Dart', 'Firebase'],
     images: [],
     links: [],
+    keyFeatures: [
+      'Firebase authorization',
+      'Personal inventory management',
+      'Design board using personal inventory',
+      'Calendar showing in-store classes',
+    ],
+    attachments: [
+      { label: 'Design Document', url: '/documents/design-doc.pdf' },
+      { label: 'Scope Document', url: '/documents/scope-doc.pdf' },
+      { label: 'Presentation Slides', url: '/documents/slides.pdf' },
+    ],
+    demoVideo: '/videos/demo.mp4',
+    activeWidth: 1000,
+    activeHeight: 800,
     featured: true,
   },
   {
