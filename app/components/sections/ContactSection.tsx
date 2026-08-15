@@ -21,7 +21,7 @@ export default function ContactSection() {
             <p className="mt-10 text-lg md:text-xl text-gray-400 max-w-sm">
               M.S. Computer Science graduate student at Seattle University.
             </p>
-            <div className="mt-10 flex justify-around max-w-xs p-5 rounded-2xl border border-gray-700 bg-black backdrop-blur-sm">
+            <div className="mt-10 flex justify-around max-w-[400px] py-5 px-3 rounded-2xl border border-gray-700 bg-black/30 backdrop-blur-sm">
               <a
                 href="mailto:oscy105@gmail.com"
                 className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-white transition-colors group"

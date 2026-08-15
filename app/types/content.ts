@@ -9,6 +9,11 @@ export interface Project {
   tech: string[];
   images: string[];
   links?: { label: string; url: string }[];
+  keyFeatures?: string[];
+  attachments?: { label: string; url: string }[];
+  demoVideo?: string;
+  activeWidth?: number;
+  activeHeight?: number;
   featured: boolean;
 }
 
@@ -18,11 +23,15 @@ export interface Experience {
   slug: string;
   company: string;
   role: string;
+  location?: string;
   startDate: string;
   endDate?: string;
   description: string;
+  achievements?: string[];
   skills: string[];
   logo?: string;
+  activeWidth?: number;
+  activeHeight?: number;
 }
 
 // Education entry

@@ -11,7 +11,7 @@ export const skills: SkillCategory[] = [
   },
   {
     category: 'Tools',
-    items: ['Git', 'GitHub', 'Firebase', 'VS Code', 'Docker', 'Linux'],
+    items: ['Git', 'GitHub', 'Firebase', 'VS Code', 'Cline', 'Linux', 'CloudFlare'],
   },
   {
     category: 'Concepts',
@@ -31,7 +31,6 @@ export const skills: SkillCategory[] = [
       '3D Web Graphics',
       'AI/ML Integration',
       'Computer Vision',
-      'Cline',
     ],
   },
 ];
