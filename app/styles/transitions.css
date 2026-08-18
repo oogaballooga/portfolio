@@ -87,6 +87,19 @@
   transform: rotateY(180deg);
 }
 
+/* FloatingFlipCard scene and image */
+.flip-scene {
+  perspective: var(--camera-perspective);
+}
+
+.flip-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  backface-visibility: hidden;
+}
+
 /* Floating animation (ambient, non-interactive) */
 @keyframes float3d {
   0% {

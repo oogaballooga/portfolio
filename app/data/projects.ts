@@ -4,25 +4,37 @@ export const projects: Project[] = [
   {
     id: 'mobile-app-capstone',
     slug: 'mobile-app-capstone',
-    title: 'Mobile App for Local Business',
+    title: 'Craft Stash',
     shortDescription:
-      'Capstone project: a mobile app built for a local company to reduce fabric waste.',
+      'Flutter app for fabric inventory, craft events, and visual project planning. Interactive demo available.',
+    inactiveCallout: 'Interactive Demo available',
     description:
-      'Designed and developed a full-stack mobile application from scratch for a local business. The app helps artists keep track of their fabric inventory, which in turn reduces material waste, and helps artists manage their projects more efficiently. Worked in an Agile team of four, communicating directly with the business sponsor throughout the semester.',
+      'Built a cross-platform Flutter application that helps makers manage fabric inventory, discover craft events and classes, and experiment with fabric combinations. The application was originally created for a company in the craft and fabric space, then revisited and restored as a public portfolio demo after its original image-storage architecture stopped fitting the project’s free-tier requirements.',
     skills: [
-      'Architecture design',
-      'DevOps',
+      'Cross-platform Flutter development',
+      'Backend architecture',
+      'JWT authentication',
+      'Secure object storage',
+      'Cost-aware system design',
+      'Image caching',
       'Agile teamwork',
-      'Client communication',
     ],
-    tech: ['Flutter', 'Dart', 'Firebase'],
+    tech: [
+      'Flutter',
+      'Dart',
+      'Firebase',
+      'Cloudflare Workers',
+      'Cloudflare R2',
+    ],
     images: [],
-    links: [],
+    links: [
+      { label: 'Interactive Demo', url: 'https://craft-stash.pages.dev/' },
+    ],
     keyFeatures: [
-      'Firebase authorization',
-      'Personal inventory management',
-      'Design board using personal inventory',
-      'Calendar showing in-store classes',
+      'Personal fabric inventory with camera and gallery uploads',
+      'Calendar for one-time and recurring craft events and classes',
+      'Build canvas for dragging, rotating, resizing, and combining fabric images',
+      'Responsive light and dark mode across Android, iOS, and web',
     ],
     attachments: [
       { label: 'Design Document', url: '/documents/design-doc.pdf' },
@@ -30,6 +42,60 @@ export const projects: Project[] = [
       { label: 'Presentation Slides', url: '/documents/slides.pdf' },
     ],
     demoVideo: '/videos/demo.mp4',
+    caseStudy: {
+      eyebrow: 'Flutter app · Firebase + Cloudflare architecture',
+      heroSummary:
+        'A fabric-inventory mobile app I initially made for my capstone project, then restored and re-architected into a functional, free public demo.',
+      sections: [
+        {
+          heading: 'Key features',
+          items: [
+            'User authentication with Firebase',
+            'Personal fabric inventory and storage',
+            'Firestore-powered calendar for upcoming events',
+            'Class requests saved to Firestore',
+            'Design board for placing inventory fabrics on the canvas',
+          ],
+        },
+        {
+          heading: 'The architecture pivot',
+          body:
+            'Firebase removed image storage from its free tier, so I replaced only that layer with Cloudflare R2 while keeping Firebase Auth and Firestore intact.',
+          items: [
+            'Firebase handles identity, user state, and structured data.',
+            'Cloudflare R2 stores images; a Worker brokers authenticated uploads, reads, and deletes.',
+            'Firestore holds fabric metadata and R2 object keys — not image bytes.',
+          ],
+        },
+        {
+          heading: 'Key Implementation: Cloudflare Worker',
+          body:
+            'The Worker verifies Firebase ID tokens against public signing keys, derives the user ID, and enforces user-scoped R2 paths. It streams private bytes to Flutter — the client never sees R2 credentials.',
+        },
+        {
+          heading: 'Engineering decisions',
+          items: [
+            'Supported Android, iOS, and web by sending image bytes instead of relying only on platform-specific file paths.',
+            'Cached image futures and downloaded bytes to avoid repeated image requests when Firestore streams rebuild the inventory UI.',
+            'Kept the migration focused by preserving Firebase Authentication and Firestore instead of rewriting the entire backend.',
+            'Balanced security, service boundaries, and free-tier sustainability while restoring an aging project.',
+          ],
+        },
+      ],
+      recruiterTakeaway:
+        'This project demonstrates that I can recover an aging codebase, diagnose a platform constraint, preserve working services, and design a secure boundary between independent backend systems.',
+      theme: {
+        background: '#101418',
+        primary: '#4594D6',
+        secondary: '#9CCBFB',
+        text: '#EAF5FF',
+        mutedText: '#C8E2F8',
+        panel: '#101418',
+        panelAccent: '#4594D6',
+        patternImage: '/images/craft-stash/blue_plaid_pattern.png',
+        iconImage: '/projectDocs/craft-stash/icon.png',
+      },
+    },
     activeWidth: 1000,
     activeHeight: 800,
     featured: true,

@@ -62,7 +62,8 @@ export interface CameraControllerReturn {
 
 export function useCameraController(
   isAtScrollBoundary: (pageId: string, direction: 'up' | 'down') => boolean,
-  scrollToTop: (pageId: string) => void
+  scrollToTop: (pageId: string) => void,
+  resetPage: (pageId: PageId) => void
 ): CameraControllerReturn {
   const initialPage = hashToPageId(
 ''
@@ -112,6 +113,10 @@ export function useCameraController(
       const targetY = -targetSlot.yIndex * window.innerHeight;
 
       isNavigating.current = true;
+      // Reset active cards before changing currentPage. This prevents a
+      // rapid leave/re-entry from applying the normal close animation after
+      // the destination page has already become visible.
+      resetPage(current);
       if (navigationTimeoutRef.current !== null) {
         clearTimeout(navigationTimeoutRef.current);
       }
@@ -147,7 +152,7 @@ export function useCameraController(
         setGhostPages([]);
       }, visualDuration);
     },
-    [cameraY]
+    [cameraY, resetPage, scrollToTop]
   );
 
   useEffect(() => {
