@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useRef, ReactNode } from 'react';
-import styles from './FloatingFlipCard.module.css';
 
 type ContentItem = string | ReactNode;
 
@@ -45,28 +44,28 @@ export default function FloatingFlipCard({
 
   const renderContent = (item: ContentItem) => {
     if (typeof item === 'string') {
-      return <img src={item} className={styles.image} alt="" />;
+      return <img src={item} className="flip-image" alt="" />;
     }
     return item;
   };
 
   return (
-    <div className={styles.scene}>
+    <div className="flip-scene">
       <div 
-        className={styles.floatWrapper}
+        className="float-wrapper"
         style={{ animationDuration: `${floatSpeed}s` }}
       >
         <div style={{ width: `${width}px`, height: `${height}px` }}>
           <div 
-            className={`${styles.flipCard} ${flipping ? styles.flipped : ''}`}
+            className={`flip-card ${flipping ? 'flipped' : ''}`}
             style={{
               '--flip-speed': `${flipSpeed}s`,
             } as React.CSSProperties}
           >
-            <div className={styles.face}>
+            <div className="face">
               {renderContent(front)}
             </div>
-            <div className={`${styles.face} ${styles.back}`}>
+            <div className="face back">
               {renderContent(back)}
             </div>
           </div>
