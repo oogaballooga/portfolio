@@ -19,16 +19,21 @@ function pageIdToHref(pageId: PageId): string {
 }
 
 export default function NavWrapper() {
-  const { currentPage, navigateTo } = useCameraContext();
+  const { currentPage, navigateTo, resetPage } = useCameraContext();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   const handleClick = (e: React.MouseEvent, pageId: PageId) => {
+    e.preventDefault();
+
     if (pageId === currentPage) {
-      e.preventDefault();
+      resetPage(pageId);
       return;
     }
-    e.preventDefault();
+
+    // Close any active card before leaving the current section. The section's
+    // currentPage effect also handles this during camera-driven navigation.
+    resetPage(currentPage);
     navigateTo(pageId);
   };
 

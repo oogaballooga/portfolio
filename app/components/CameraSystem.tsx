@@ -5,7 +5,7 @@ import { motion, useTransform } from 'framer-motion';
 import { CameraProvider } from './CameraContext';
 import { useCameraController } from '../hooks/useCameraController';
 import NavWrapper from './NavWrapper';
-import type { GhostPage } from '../types/content';
+import type { GhostPage, PageId } from '../types/content';
 
 interface CameraSystemProps {
   children: ReactNode;
@@ -26,6 +26,7 @@ function GhostPageOverlay({ ghost }: { ghost: GhostPage }) {
 
 export default function CameraSystem({ children }: CameraSystemProps) {
   const scrollRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
+  const pageResetters = useRef<Map<PageId, () => void>>(new Map());
 
   const isAtScrollBoundary = useCallback(
     (pageId: string, direction: 'up' | 'down'): boolean => {
@@ -51,7 +52,35 @@ export default function CameraSystem({ children }: CameraSystemProps) {
     }
   }, []);
 
-  const controller = useCameraController(isAtScrollBoundary, scrollToTop);
+  const handleScrollRef = useCallback(
+    (pageId: string, ref: HTMLDivElement | null) => {
+      scrollRefs.current.set(pageId, ref);
+    },
+    []
+  );
+
+  const registerPageReset = useCallback(
+    (pageId: PageId, reset: () => void) => {
+      pageResetters.current.set(pageId, reset);
+
+      return () => {
+        if (pageResetters.current.get(pageId) === reset) {
+          pageResetters.current.delete(pageId);
+        }
+      };
+    },
+    []
+  );
+
+  const resetPage = useCallback((pageId: PageId) => {
+    pageResetters.current.get(pageId)?.();
+  }, []);
+
+  const controller = useCameraController(
+    isAtScrollBoundary,
+    scrollToTop,
+    resetPage
+  );
   const {
     cameraYSpring,
     currentPage,
@@ -62,13 +91,6 @@ export default function CameraSystem({ children }: CameraSystemProps) {
   } = controller;
 
   const backgroundY = useTransform(cameraYSpring, (y: number) => y * 0.3);
-
-  const handleScrollRef = useCallback(
-    (pageId: string, ref: HTMLDivElement | null) => {
-      scrollRefs.current.set(pageId, ref);
-    },
-    []
-  );
 
   // When user holds Ctrl/Meta (for zoom), temporarily disable scrolling
   // on all page shells and card panels so the browser's compositor
@@ -107,6 +129,8 @@ export default function CameraSystem({ children }: CameraSystemProps) {
         direction,
         ghostPages,
         navigateTo,
+        resetPage,
+        registerPageReset,
         registerScrollRef: handleScrollRef,
       }}
     >

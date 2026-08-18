@@ -11,6 +11,8 @@ interface CameraContextValue {
   direction: CameraDirection;
   ghostPages: GhostPage[];
   navigateTo: (pageId: PageId) => void;
+  resetPage: (pageId: PageId) => void;
+  registerPageReset: (pageId: PageId, reset: () => void) => () => void;
   registerScrollRef?: (pageId: string, ref: HTMLDivElement | null) => void;
 }
 
@@ -21,6 +23,8 @@ export const CameraContext = createContext<CameraContextValue>({
   direction: 'none',
   ghostPages: [],
   navigateTo: () => {},
+  resetPage: () => {},
+  registerPageReset: () => () => {},
 });
 
 export function useCameraContext(): CameraContextValue {
