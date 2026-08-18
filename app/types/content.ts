@@ -1,9 +1,36 @@
 // Project entry
+export interface ProjectDetailTheme {
+  background: string;
+  primary: string;
+  secondary: string;
+  text: string;
+  mutedText: string;
+  panel: string;
+  panelAccent: string;
+  patternImage?: string;
+  iconImage?: string;
+}
+
+export interface ProjectCaseStudySection {
+  heading: string;
+  body?: string;
+  items?: string[];
+}
+
+export interface ProjectCaseStudy {
+  eyebrow: string;
+  heroSummary: string;
+  sections: ProjectCaseStudySection[];
+  recruiterTakeaway: string;
+  theme?: ProjectDetailTheme;
+}
+
 export interface Project {
   id: string;
   slug: string;
   title: string;
   shortDescription: string;
+  inactiveCallout?: string;
   description: string;
   skills: string[];
   tech: string[];
@@ -12,6 +39,7 @@ export interface Project {
   keyFeatures?: string[];
   attachments?: { label: string; url: string }[];
   demoVideo?: string;
+  caseStudy?: ProjectCaseStudy;
   activeWidth?: number;
   activeHeight?: number;
   featured: boolean;

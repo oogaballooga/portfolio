@@ -20,7 +20,7 @@ export default function ExperienceSection() {
   const experienceIds = useMemo(() => experiences.map((e) => e.id), []);
   const { cardRects, sectionRef, setPlaceholderRef } =
     useProjectCardLayout(experienceIds);
-  const { currentPage } = useCameraContext();
+  const { currentPage, registerPageReset } = useCameraContext();
 
   const activate = (id: string) => {
     setZCounter((prev) => {
@@ -39,6 +39,12 @@ export default function ExperienceSection() {
       deactivate();
     }
   }, [currentPage, deactivate]);
+
+  // Let the navbar close the active experience card when its tab is clicked again.
+  useEffect(
+    () => registerPageReset('experience', deactivate),
+    [registerPageReset, deactivate]
+  );
 
   return (
     <div ref={sectionRef} className="relative w-full min-h-screen text-white">

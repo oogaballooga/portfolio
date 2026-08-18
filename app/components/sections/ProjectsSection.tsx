@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ProjectCard, {
   CARD_WIDTH,
@@ -10,6 +10,7 @@ import ProjectCard, {
 } from '../ProjectCard';
 import { projects } from '../../data/projects';
 import { useProjectCardLayout } from '../../hooks/useProjectCardLayout';
+import { useCameraContext } from '../CameraContext';
 
 export default function ProjectsSection() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export default function ProjectsSection() {
   const projectIds = useMemo(() => projects.map((p) => p.id), []);
   const { cardRects, sectionRef, setPlaceholderRef } =
     useProjectCardLayout(projectIds);
+  const { currentPage, registerPageReset } = useCameraContext();
 
   const activate = (id: string) => {
     setZCounter((prev) => {
@@ -29,7 +31,20 @@ export default function ProjectsSection() {
     setActiveId(id);
   };
 
-  const deactivate = () => setActiveId(null);
+  const deactivate = useCallback(() => setActiveId(null), []);
+
+  // Deactivate project cards whenever the camera leaves the projects page.
+  useEffect(() => {
+    if (currentPage !== 'projects') {
+      deactivate();
+    }
+  }, [currentPage, deactivate]);
+
+  // Let the navbar close the active project when its tab is clicked again.
+  useEffect(
+    () => registerPageReset('projects', deactivate),
+    [registerPageReset, deactivate]
+  );
 
   return (
     <div ref={sectionRef} className="relative w-full min-h-screen text-white">
@@ -80,6 +95,7 @@ export default function ProjectsSection() {
             activeWidth={ACTIVE_WIDTH}
             activeHeight={ACTIVE_HEIGHT}
             isActive={isActive}
+            isPageActive={currentPage === 'projects'}
             zIndex={cardZ[project.id] ?? 1}
             onActivate={() => activate(project.id)}
             onDeactivate={deactivate}
