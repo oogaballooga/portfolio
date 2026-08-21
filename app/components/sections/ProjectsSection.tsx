@@ -17,10 +17,10 @@ export default function ProjectsSection() {
   const [zCounter, setZCounter] = useState(1);
   const [cardZ, setCardZ] = useState<Record<string, number>>({});
 
+  const { currentPage, registerPageReset } = useCameraContext();
   const projectIds = useMemo(() => projects.map((p) => p.id), []);
   const { cardRects, sectionRef, setPlaceholderRef } =
-    useProjectCardLayout(projectIds);
-  const { currentPage, registerPageReset } = useCameraContext();
+    useProjectCardLayout(projectIds, currentPage === 'projects');
 
   const activate = (id: string) => {
     setZCounter((prev) => {

@@ -130,6 +130,7 @@ export default function ProjectCard({
         width: cardIsActive ? activeWidthCss : `${width}px`,
         height: cardIsActive ? activeHeightCss : `${height}px`,
         transition: `top ${cardTransition}, left ${cardTransition}, width ${cardTransition}, height ${cardTransition}`,
+        willChange: 'top, left, width, height',
         backgroundColor: isActive ? '#181818' : hovered ? '#101010' : 'black',
         border: '4px solid rgba(156, 163, 175, 0.5)',
         borderRadius: '1rem',

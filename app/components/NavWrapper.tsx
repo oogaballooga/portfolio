@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCameraContext } from './CameraContext';
 import { PAGE_SLOTS } from '../data/pages';
@@ -18,7 +18,7 @@ function pageIdToHref(pageId: PageId): string {
   return pageId === 'contact' ? '/' : `/#${pageId}`;
 }
 
-export default function NavWrapper() {
+export default memo(function NavWrapper() {
   const { currentPage, navigateTo, resetPage } = useCameraContext();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -52,4 +52,4 @@ export default function NavWrapper() {
       ))}
     </nav>
   );
-}
+})

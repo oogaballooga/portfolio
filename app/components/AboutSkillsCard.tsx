@@ -85,7 +85,7 @@ export default function AboutSkillsCard() {
           {/* Interests carousels */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
             {interests.map((category) => (
-              <InterestCarousel key={category.id} category={category} />
+              <InterestCarousel key={category.id} category={category} isPaused={currentPage !== 'aboutSkills'} />
             ))}
           </div>
 

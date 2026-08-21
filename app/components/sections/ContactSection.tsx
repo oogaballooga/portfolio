@@ -1,3 +1,6 @@
+'use client';
+
+import { useCameraContext } from '../CameraContext';
 import FloatingFlipCard from '../FloatingFlipCard';
 
 const PFP_IMAGES = [
@@ -6,6 +9,9 @@ const PFP_IMAGES = [
 ];
 
 export default function ContactSection() {
+  const { currentPage } = useCameraContext();
+  const isOffScreen = currentPage !== 'contact';
+
   return (
     <div className="relative w-full h-screen text-white">
       <div className="h-full flex items-center justify-center">
@@ -68,6 +74,7 @@ export default function ContactSection() {
               content={PFP_IMAGES}
               width={288}
               height={384}
+              paused={isOffScreen}
             />
           </div>
         </div>

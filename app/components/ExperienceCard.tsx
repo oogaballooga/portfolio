@@ -111,6 +111,7 @@ export default function ExperienceCard({
         // wrapper width/height makes the detail content reflow while it is
         // entering, which produces visible line-wrapping jumps.
         transition: 'top 0.4s ease, left 0.4s ease',
+        willChange: 'top, left',
         width: `${currentW}px`,
         height: `${currentH}px`,
         perspective: '1200px',
