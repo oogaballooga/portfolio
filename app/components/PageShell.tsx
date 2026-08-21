@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useRef, useEffect } from 'react';
+import { type ReactNode, memo, useRef, useEffect } from 'react';
 
 interface PageShellProps {
   yIndex: number;
@@ -9,7 +9,7 @@ interface PageShellProps {
   onScrollRef?: (pageId: string, ref: HTMLDivElement | null) => void;
 }
 
-export default function PageShell({
+export default memo(function PageShell({
   yIndex,
   pageId,
   children,
@@ -38,4 +38,4 @@ export default function PageShell({
       {children}
     </div>
   );
-}
+})

@@ -179,15 +179,18 @@ export function useCameraController(
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Control' || e.key === 'Meta') {
         isZoomingRef.current = true;
+        document.body.classList.add('ctrl-zoom-active');
       }
     };
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.key === 'Control' || e.key === 'Meta') {
         isZoomingRef.current = false;
+        document.body.classList.remove('ctrl-zoom-active');
       }
     };
     const onBlur = () => {
       isZoomingRef.current = false;
+      document.body.classList.remove('ctrl-zoom-active');
     };
 
     window.addEventListener('keydown', onKeyDown);

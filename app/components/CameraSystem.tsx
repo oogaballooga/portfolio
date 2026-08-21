@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useCallback, useRef, useEffect } from 'react';
+import { type ReactNode, useCallback, useRef, useMemo } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { CameraProvider } from './CameraContext';
 import { useCameraController } from '../hooks/useCameraController';
@@ -92,48 +92,23 @@ export default function CameraSystem({ children }: CameraSystemProps) {
 
   const backgroundY = useTransform(cameraYSpring, (y: number) => y * 0.3);
 
-  // When user holds Ctrl/Meta (for zoom), temporarily disable scrolling
-  // on all page shells and card panels so the browser's compositor
-  // has no overflow to reposition. Zoom operates above DOM propagation.
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Control' || e.key === 'Meta') {
-        document.body.classList.add('ctrl-zoom-active');
-      }
-    };
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'Control' || e.key === 'Meta') {
-        document.body.classList.remove('ctrl-zoom-active');
-      }
-    };
-    const onBlur = () => {
-      document.body.classList.remove('ctrl-zoom-active');
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
-    window.addEventListener('blur', onBlur);
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
-      window.removeEventListener('blur', onBlur);
-    };
-  }, []);
+  const contextValue = useMemo(
+    () => ({
+      cameraY: cameraYSpring,
+      currentPage,
+      isTransitioning,
+      direction,
+      ghostPages,
+      navigateTo,
+      resetPage,
+      registerPageReset,
+      registerScrollRef: handleScrollRef,
+    }),
+    [cameraYSpring, currentPage, isTransitioning, direction, ghostPages, navigateTo, resetPage, registerPageReset, handleScrollRef]
+  );
 
   return (
-    <CameraProvider
-      value={{
-        cameraY: cameraYSpring,
-        currentPage,
-        isTransitioning,
-        direction,
-        ghostPages,
-        navigateTo,
-        resetPage,
-        registerPageReset,
-        registerScrollRef: handleScrollRef,
-      }}
-    >
+    <CameraProvider value={contextValue}>
       <NavWrapper />
 
       <div className="camera-container">

@@ -14,7 +14,7 @@ interface UseProjectCardLayoutReturn {
   setPlaceholderRef: (projectId: string, el: HTMLDivElement | null) => void;
 }
 
-export function useProjectCardLayout(cardIds: string[]): UseProjectCardLayoutReturn {
+export function useProjectCardLayout(cardIds: string[], isPageActive: boolean = true): UseProjectCardLayoutReturn {
   const [cardRects, setCardRects] = useState<CardRect[]>([]);
   const sectionRef = useRef<HTMLDivElement>(null);
   const placeholderRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -43,16 +43,28 @@ export function useProjectCardLayout(cardIds: string[]): UseProjectCardLayoutRet
   }, [measureRects]);
 
   useEffect(() => {
-    const onResize = () => measureRects();
+    if (!isPageActive) return;
+    let rafId: number | null = null;
+    const onResize = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        measureRects();
+      });
+    };
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, [measureRects]);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [measureRects, isPageActive]);
 
   useEffect(() => {
+    if (!isPageActive) return;
     const onHashChange = () => setTimeout(measureRects, 100);
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
-  }, [measureRects]);
+  }, [measureRects, isPageActive]);
 
   const setPlaceholderRef = useCallback(
     (projectId: string, el: HTMLDivElement | null) => {

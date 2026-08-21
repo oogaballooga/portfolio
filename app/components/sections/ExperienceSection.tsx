@@ -17,10 +17,10 @@ export default function ExperienceSection() {
   const [zCounter, setZCounter] = useState(1);
   const [cardZ, setCardZ] = useState<Record<string, number>>({});
 
+  const { currentPage, registerPageReset } = useCameraContext();
   const experienceIds = useMemo(() => experiences.map((e) => e.id), []);
   const { cardRects, sectionRef, setPlaceholderRef } =
-    useProjectCardLayout(experienceIds);
-  const { currentPage, registerPageReset } = useCameraContext();
+    useProjectCardLayout(experienceIds, currentPage === 'experience');
 
   const activate = (id: string) => {
     setZCounter((prev) => {

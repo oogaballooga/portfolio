@@ -11,6 +11,7 @@ interface FloatingFlipCardProps {
   floatSpeed?: number;
   flipSpeed?: number;
   flipInterval?: number;
+  paused?: boolean;
 }
 
 export default function FloatingFlipCard({
@@ -20,6 +21,7 @@ export default function FloatingFlipCard({
   floatSpeed = 10,
   flipSpeed = 1,
   flipInterval = 20000, // 1/1000 of a second
+  paused = false,
 }: FloatingFlipCardProps) {
   const [flipping, setFlipping] = useState(false);
   const [front, setFront] = useState(content[0]);
@@ -27,6 +29,7 @@ export default function FloatingFlipCard({
   const currentIndexRef = useRef(0);
 
   useEffect(() => {
+    if (paused) return;
     const id = setInterval(() => {
       setFlipping(true);
 
@@ -40,7 +43,7 @@ export default function FloatingFlipCard({
     }, flipInterval);
 
     return () => clearInterval(id);
-  }, [back, content, flipInterval, flipSpeed]);
+  }, [back, content, flipInterval, flipSpeed, paused]);
 
   const renderContent = (item: ContentItem) => {
     if (typeof item === 'string') {
@@ -51,9 +54,12 @@ export default function FloatingFlipCard({
 
   return (
     <div className="flip-scene">
-      <div 
+      <div
         className="float-wrapper"
-        style={{ animationDuration: `${floatSpeed}s` }}
+        style={{
+          animationDuration: `${floatSpeed}s`,
+          animationPlayState: paused ? 'paused' : 'running',
+        }}
       >
         <div style={{ width: `${width}px`, height: `${height}px` }}>
           <div 

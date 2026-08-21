@@ -7,6 +7,7 @@ import type { InterestCategory } from '../data/interests';
 
 interface InterestCarouselProps {
   category: InterestCategory;
+  isPaused?: boolean;
 }
 
 const slideVariants = {
@@ -24,7 +25,7 @@ const slideVariants = {
   }),
 };
 
-export default function InterestCarousel({ category }: InterestCarouselProps) {
+export default function InterestCarousel({ category, isPaused = false }: InterestCarouselProps) {
   const { title, items } = category;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -45,13 +46,20 @@ export default function InterestCarousel({ category }: InterestCarouselProps) {
   const goNext = useCallback(() => goTo(currentIndex + 1, 1), [currentIndex, goTo]);
   const goPrev = useCallback(() => goTo(currentIndex - 1, -1), [currentIndex, goTo]);
 
-  // Auto-rotate every 5 seconds
+  // Auto-rotate every 5 seconds (paused when section is off-screen)
   useEffect(() => {
+    if (isPaused) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
     timerRef.current = setInterval(goNext, 5000);
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [goNext]);
+  }, [goNext, isPaused]);
 
   const pauseTimer = useCallback(() => {
     if (timerRef.current) {
