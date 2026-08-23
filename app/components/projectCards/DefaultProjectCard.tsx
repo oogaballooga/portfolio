@@ -1,118 +1,122 @@
+import { CaseStudySection } from './CaseStudySection';
+import { ProjectHeroLinks } from './ProjectHeroLinks';
 import type { ProjectCardDetailProps } from './types';
 
 export default function DefaultProjectCard({
   project,
 }: ProjectCardDetailProps) {
+  const caseStudy = project.caseStudy;
+  const theme = caseStudy?.theme;
+
+  if (!caseStudy || !theme) return null;
+
+  const [keyFeaturesSection, architectureSection, ...remainingSections] =
+    caseStudy.sections;
+
   return (
-    <div className="min-h-full p-12 text-white">
-      <h2 className="mb-6 text-3xl font-bold">{project.title}</h2>
-      <p className="mb-8 text-lg leading-relaxed text-gray-300">
-        {project.description}
+    <div
+      className="h-full p-8 sm:p-12"
+      style={{ backgroundColor: theme.background }}
+    >
+      {/* ── Hero ── */}
+      <div className="relative flex items-start gap-8 pb-3 mb-8 sm:pb-0 sm:mb-0">
+        <div className="max-w-4xl shrink-0">
+          <p
+            className="mb-2 text-sm font-semibold uppercase tracking-[0.28em]"
+            style={{ color: theme.secondary }}
+          >
+            {caseStudy.eyebrow}
+          </p>
+          <h2 className="text-4xl font-black tracking-tight text-white sm:text-6xl">
+            {project.title}
+          </h2>
+        </div>
+
+        <ProjectHeroLinks project={project} theme={theme} />
+      </div>
+
+      <p
+        className="max-w-3xl pb-3 text-lg leading-relaxed sm:mt-6 sm:pb-0 sm:text-xl"
+        style={{ color: theme.mutedText }}
+      >
+        {caseStudy.heroSummary}
       </p>
 
-      {project.keyFeatures && project.keyFeatures.length > 0 && (
-        <section className="mb-8">
-          <h3 className="mb-3 text-lg font-semibold uppercase tracking-wide text-gray-400">
-            Key Features
-          </h3>
-          <ul className="space-y-2">
-            {project.keyFeatures.map((feature) => (
-              <li key={feature} className="flex items-start gap-2 text-gray-300">
-                <span className="mt-1 text-gray-500">▸</span>
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* ── Content Grid ── */}
+      <div className="mt-4 grid gap-5 sm:mt-[46px] lg:grid-cols-2">
+        {keyFeaturesSection && (
+          <div
+            className="rounded-3xl p-5 sm:p-6"
+            style={{
+              border: `1px solid ${theme.primary}59`,
+              backgroundColor: `${theme.panel}e6`,
+            }}
+          >
+            <CaseStudySection
+              section={keyFeaturesSection}
+              textColor={theme.text}
+              accentColor={theme.secondary}
+            />
+          </div>
+        )}
 
-      {project.skills.length > 0 && (
-        <section className="mb-8">
-          <h3 className="mb-3 text-lg font-semibold uppercase tracking-wide text-gray-400">
-            Skills Demonstrated
-          </h3>
-          <ul className="space-y-2">
-            {project.skills.map((skill) => (
-              <li key={skill} className="flex items-start gap-2 text-gray-300">
-                <span className="mt-1 text-gray-500">▸</span>
-                <span>{skill}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {architectureSection && (
+          <div
+            className="rounded-3xl p-5 sm:p-6"
+            style={{
+              border: `1px solid ${theme.secondary}4d`,
+              backgroundColor: `${theme.panelAccent}1a`,
+            }}
+          >
+            <CaseStudySection
+              section={architectureSection}
+              textColor={theme.text}
+              accentColor={theme.secondary}
+            />
+          </div>
+        )}
+      </div>
 
-      <section className="mb-8">
-        <h3 className="mb-3 text-lg font-semibold uppercase tracking-wide text-gray-400">
-          Tech Stack
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((tech) => (
-            <span
-              key={tech}
-              className="rounded-full bg-gray-800 px-4 py-1.5 text-sm text-gray-300"
+      {/* ── Remaining Sections ── */}
+      {remainingSections.length > 0 && (
+        <div className="mt-5 space-y-5">
+          {remainingSections.map((section) => (
+            <div
+              key={section.heading}
+              className="rounded-3xl p-5 sm:p-6"
+              style={{
+                border: `1px solid ${theme.secondary}4d`,
+                backgroundColor: `${theme.panel}e6`,
+              }}
             >
-              {tech}
-            </span>
+              <CaseStudySection
+                section={section}
+                textColor={theme.text}
+                accentColor={theme.secondary}
+              />
+            </div>
           ))}
         </div>
-      </section>
-
-      {project.links && project.links.length > 0 && (
-        <section className="mb-8">
-          <h3 className="mb-3 text-lg font-semibold uppercase tracking-wide text-gray-400">
-            Links
-          </h3>
-          <div className="flex flex-wrap gap-4">
-            {project.links.map((link) => (
-              <a
-                key={link.url}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 underline transition-colors hover:text-blue-300"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        </section>
       )}
 
-      {project.attachments && project.attachments.length > 0 && (
-        <section className="mb-8">
-          <h3 className="mb-3 text-lg font-semibold uppercase tracking-wide text-gray-400">
-            Documents
-          </h3>
-          <div className="flex flex-wrap gap-4">
-            {project.attachments.map((attachment) => (
-              <a
-                key={attachment.url}
-                href={attachment.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg bg-gray-800 px-4 py-2 text-sm text-blue-400 transition-colors hover:bg-gray-700 hover:text-blue-300"
-              >
-                {attachment.label}
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {project.demoVideo && (
-        <section className="mb-8">
-          <h3 className="mb-3 text-lg font-semibold uppercase tracking-wide text-gray-400">
-            Demo
-          </h3>
-          <div className="overflow-hidden rounded-xl border border-gray-600 bg-black">
-            <video controls preload="metadata" className="w-full">
-              <source src={project.demoVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </section>
-      )}
+      {/* ── Takeaway ── */}
+      <div
+        className="mt-5 rounded-3xl p-5 pb-3 sm:p-6 sm:pb-4"
+        style={{
+          border: `1px solid ${theme.secondary}4d`,
+          backgroundColor: `${theme.panel}e6`,
+        }}
+      >
+        <p
+          className="mb-3 text-2xl font-extrabold tracking-tight"
+          style={{ color: theme.secondary }}
+        >
+          Takeaway
+        </p>
+        <p className="text-base leading-8 sm:text-lg" style={{ color: theme.text }}>
+          {caseStudy.recruiterTakeaway}
+        </p>
+      </div>
     </div>
   );
 }

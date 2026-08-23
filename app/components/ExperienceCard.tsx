@@ -240,7 +240,7 @@ export default function ExperienceCard({
                 e.stopPropagation();
                 onDeactivate();
               }}
-              className="absolute top-4 right-4 bg-black text-white border-none rounded-full w-8 h-8 cursor-pointer z-10 flex items-center justify-center hover:bg-gray-800 transition-colors"
+              className="absolute top-4 right-4 bg-black text-white border-none rounded-full w-12 h-12 cursor-pointer z-10 flex items-center justify-center text-2xl leading-none hover:bg-[#444] transition-colors"
               aria-label="Close detail view"
             >
               ✕

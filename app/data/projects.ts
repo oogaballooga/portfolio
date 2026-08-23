@@ -29,6 +29,7 @@ export const projects: Project[] = [
     images: [],
     links: [
       { label: 'Interactive Demo', url: 'https://craft-stash.pages.dev/' },
+      { label: 'GitHub', url: 'https://github.com/oogaballooga/Craft-Stash' },
     ],
     keyFeatures: [
       'Personal fabric inventory with camera and gallery uploads',
@@ -37,11 +38,11 @@ export const projects: Project[] = [
       'Responsive light and dark mode across Android, iOS, and web',
     ],
     attachments: [
-      { label: 'Design Document', url: '/documents/design-doc.pdf' },
-      { label: 'Scope Document', url: '/documents/scope-doc.pdf' },
-      { label: 'Presentation Slides', url: '/documents/slides.pdf' },
+      { label: 'Design Document', url: '/projectDocs/craft-stash/Design%20Doc.pdf' },
+      { label: 'Presentation Slides', url: '/projectDocs/craft-stash/Presentation.pdf' },
+      { label: 'Scope Document', url: '/projectDocs/craft-stash/Scope%20Doc.pdf' },
     ],
-    demoVideo: '/videos/demo.mp4',
+    demoVideo: '/projectDocs/craft-stash/craftstash_video_demo.mp4',
     caseStudy: {
       eyebrow: 'Flutter app · Firebase + Cloudflare architecture',
       heroSummary:
@@ -93,7 +94,7 @@ export const projects: Project[] = [
         panel: '#101418',
         panelAccent: '#4594D6',
         patternImage: '/images/craft-stash/blue_plaid_pattern.png',
-        iconImage: '/projectDocs/craft-stash/icon.png',
+        iconImage: '/projectDocs/craft-stash/icon.webp',
       },
     },
     activeWidth: 1000,
@@ -108,6 +109,44 @@ export const projects: Project[] = [
       'Personal portfolio with 3D spatial navigation and custom UI components.',
     description:
       'Developed a personal portfolio website using Next.js and React without external React UI libraries. Features a custom 3D camera navigation system that creates the illusion of moving through a connected spatial environment. Built with performance, accessibility, and recruiter experience as top priorities.',
+    caseStudy: {
+      eyebrow: 'React · Next.js · Tailwind CSS · Framer Motion',
+      heroSummary:
+        'Personal portfolio with a single-DOM 3D camera system that moves through five connected spatial pages.',
+      sections: [
+        {
+          heading: 'Key features',
+          items: [
+            'Virtual camera translating along the Y axis with spring physics',
+            'Hash-based deep links to every section with animated fly-throughs',
+            'Ghost pages rendered during long-distance camera transitions',
+            'Reduced-motion mode that disables all 3D, glow, and ghost effects',
+          ],
+        },
+        {
+          heading: 'Engineering decisions',
+          body:
+            'The entire experience is one DOM tree moved by a virtual camera — no WebGL, no canvas, no page reloads.',
+          items: [
+            'Framer Motion springs drive all navigation; CSS keyframes handle only ambient glow.',
+            'Animation stays GPU-composited by transforming position, opacity, and filter only.',
+            'Server components stream static content while client islands own the camera.',
+            'Typed data files drive generic card blueprints, so content never lives in components.',
+          ],
+        },
+      ],
+      recruiterTakeaway:
+        'This project demonstrates that I can design an interaction system from scratch, keep complex motion smooth without WebGL, and structure a codebase so content and presentation stay cleanly separated.',
+      theme: {
+        background: '#0A0A0A',
+        primary: '#EDEDED',
+        secondary: '#FFFFFF',
+        text: '#D1D5DB',
+        mutedText: '#9CA3AF',
+        panel: '#181818',
+        panelAccent: '#FFFFFF',
+      },
+    },
     skills: ['UX/UI design', 'Component architecture', '3D spatial design'],
     tech: ['React', 'Next.js', 'Tailwind CSS', 'Framer Motion'],
     images: [],

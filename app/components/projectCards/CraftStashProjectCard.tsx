@@ -1,44 +1,7 @@
 import { useState } from 'react';
-import type { ProjectCaseStudySection } from '../../types/content';
+import { CaseStudySection } from './CaseStudySection';
+import { ProjectHeroLinks } from './ProjectHeroLinks';
 import type { ProjectCardDetailProps } from './types';
-
-function CaseStudySection({
-  section,
-  textColor,
-  accentColor,
-}: {
-  section: ProjectCaseStudySection;
-  textColor: string;
-  accentColor: string;
-}) {
-  return (
-    <section>
-      <p
-        className="mb-3 text-2xl font-extrabold tracking-tight"
-        style={{ color: accentColor }}
-      >
-        {section.heading}
-      </p>
-      {section.body && (
-        <p className="text-base leading-8 sm:text-lg" style={{ color: textColor }}>
-          {section.body}
-        </p>
-      )}
-      {section.items && section.items.length > 0 && (
-        <ul className="mt-3 space-y-3" style={{ color: textColor }}>
-          {section.items.map((item) => (
-            <li key={item} className="flex items-start gap-3 text-lg leading-relaxed">
-              <span className="mt-1 shrink-0" style={{ color: accentColor }}>
-                ✦
-              </span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  );
-}
 
 export default function CraftStashProjectCard({
   project,
@@ -61,7 +24,7 @@ export default function CraftStashProjectCard({
       style={{ backgroundColor: theme.background }}
     >
       {/* ── Hero ── */}
-      <div className="relative flex items-start gap-8 pb-3 mb-8">
+      <div className="relative flex items-start gap-8 pb-3 mb-8 sm:pb-0 sm:mb-0">
         <div className="max-w-4xl shrink-0">
           <p
             className="mb-2 text-sm font-semibold uppercase tracking-[0.28em]"
@@ -83,7 +46,7 @@ export default function CraftStashProjectCard({
             className="absolute left-1/2 top-16 -translate-x-1/2 group flex flex-col items-center gap-2"
           >
             <span
-              className="flex h-25 w-25 items-center justify-center overflow-hidden rounded-[1.6rem] transition-transform duration-200 group-hover:scale-105"
+              className="relative flex h-25 w-25 items-center justify-center rounded-[1.6rem]"
               style={{
                 boxShadow: `0 0 0 2px ${theme.primary}, 0 0 40px ${theme.primary}99, 0 0 80px ${theme.primary}55`,
               }}
@@ -94,10 +57,17 @@ export default function CraftStashProjectCard({
                 <img
                   src={theme.iconImage}
                   alt=""
-                  className="h-full w-full object-cover"
+                  className="h-full w-full rounded-[1.6rem] object-cover"
                   onError={() => setIconError(true)}
                 />
               )}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-[1.6rem] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  boxShadow: `0 0 0 2px ${theme.primary}, 0 0 70px ${theme.primary}cc, 0 0 140px ${theme.primary}99`,
+                }}
+              />
             </span>
             <span
               className="text-base font-semibold transition-colors group-hover:text-white"
@@ -107,17 +77,19 @@ export default function CraftStashProjectCard({
             </span>
           </a>
         )}
+
+        <ProjectHeroLinks project={project} theme={theme} />
       </div>
 
       <p
-        className="max-w-3xl pb-3 text-lg leading-relaxed sm:text-xl"
+        className="max-w-3xl pb-3 text-lg leading-relaxed sm:-mt-[45px] sm:pb-0 sm:text-xl"
         style={{ color: theme.mutedText }}
       >
         {caseStudy.heroSummary}
       </p>
 
       {/* ── Content Grid ── */}
-      <div className="mt-4 grid gap-5 lg:grid-cols-2">
+      <div className="mt-4 grid gap-5 sm:mt-[46px] lg:grid-cols-2">
         {keyFeaturesSection && (
           <div
             className="rounded-3xl p-5 sm:p-6"

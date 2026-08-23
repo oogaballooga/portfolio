@@ -220,7 +220,7 @@ export default function ProjectCard({
             event.stopPropagation();
             onDeactivate();
           }}
-          className="absolute right-5 top-5 z-10 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-none bg-black text-3xl text-white transition-colors hover:bg-gray-800"
+          className="absolute right-5 top-5 z-10 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-none bg-[#333] text-3xl text-white transition-colors hover:bg-[#444]"
           aria-label="Close project detail view"
         >
           ✕

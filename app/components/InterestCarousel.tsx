@@ -90,7 +90,7 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
   }, []);
 
   return (
-    <div className="text-center">
+    <div className="flex flex-col justify-end text-center">
       {/* Category title */}
       <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
         {title}

@@ -43,4 +43,12 @@ next-env.d.ts
 # cline
 .clinerules/
 memory-bank/
+
+# internal agent/planning docs — local only, never publish
 implementation_plan.md
+mobile_plan.md
+.agents/
+skills-lock.json
+AGENTS.md
+ARCHITECTURE.md
+DESIGN.md
