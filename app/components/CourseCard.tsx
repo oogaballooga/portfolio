@@ -96,6 +96,7 @@ export default function CourseCard({
   return (
     <div
       ref={wrapperRef}
+      className="course-card-wrapper"
       style={{
         width: isActive ? activeWidth : width,
         height,

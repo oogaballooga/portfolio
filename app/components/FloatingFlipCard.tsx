@@ -31,18 +31,32 @@ export default function FloatingFlipCard({
   const currentIndexRef = useRef(0);
   const flippedRef = useRef(false);
   const contentRef = useRef(content);
+  const timeoutIdsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+  const motionPaused = paused || prefersReducedMotion || isMobile;
 
   useEffect(() => {
     contentRef.current = content;
   }, [content]);
 
   useEffect(() => {
-    if (paused || prefersReducedMotion) return;
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    updateIsMobile();
+    mediaQuery.addEventListener('change', updateIsMobile);
+    return () => mediaQuery.removeEventListener('change', updateIsMobile);
+  }, []);
+
+  useEffect(() => {
+    if (motionPaused) return;
+    const timeoutIds = timeoutIdsRef.current;
     const id = setInterval(() => {
       // Swap images at the midpoint (90°) when the face is edge-on and invisible.
       // flippedRef has already been toggled, so it reflects the new visible face.
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
+        timeoutIds.delete(timeoutId);
         const c = contentRef.current;
         const nextIndex = (currentIndexRef.current + 1) % c.length;
         const nextNextIndex = (nextIndex + 1) % c.length;
@@ -57,14 +71,19 @@ export default function FloatingFlipCard({
         }
         currentIndexRef.current = nextIndex;
       }, flipSpeed * 500);
+      timeoutIds.add(timeoutId);
 
       // Flip to the opposite side (one rotation per tick).
       flippedRef.current = !flippedRef.current;
       setFlipping(flippedRef.current);
     }, flipInterval);
 
-    return () => clearInterval(id);
-  }, [flipInterval, flipSpeed, paused, prefersReducedMotion]);
+    return () => {
+      clearInterval(id);
+      timeoutIds.forEach(clearTimeout);
+      timeoutIds.clear();
+    };
+  }, [flipInterval, flipSpeed, motionPaused]);
 
   const renderContent = (item: ContentItem): ReactNode => {
     const isImageObject = typeof item === 'object' && item !== null && 'src' in item;
@@ -82,7 +101,7 @@ export default function FloatingFlipCard({
         className="float-wrapper"
         style={{
           animationDuration: `${floatSpeed}s`,
-          animationPlayState: paused ? 'paused' : 'running',
+          animationPlayState: motionPaused ? 'paused' : 'running',
         }}
       >
         <div style={{ width: `${width}px`, height: `${height}px` }}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import type { InterestCategory } from '../data/interests';
@@ -36,8 +36,10 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDocumentHidden, setIsDocumentHidden] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
 
   const itemCount = items.length;
   const currentItem = items[currentIndex];
@@ -57,52 +59,51 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
   const goNext = useCallback(() => goTo(currentIndex + 1, 1), [currentIndex, goTo]);
   const goPrev = useCallback(() => goTo(currentIndex - 1, -1), [currentIndex, goTo]);
 
-  // Auto-rotate every 5 seconds (paused when section is off-screen)
   useEffect(() => {
-    if (isPaused || prefersReducedMotion) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-      return;
-    }
-    timerRef.current = setInterval(goNext, 5000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [goNext, isPaused, prefersReducedMotion]);
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+    const updateVisibility = () => setIsDocumentHidden(document.hidden);
 
-  const pauseTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
+    updateIsMobile();
+    updateVisibility();
+    mediaQuery.addEventListener('change', updateIsMobile);
+    document.addEventListener('visibilitychange', updateVisibility);
+    return () => {
+      mediaQuery.removeEventListener('change', updateIsMobile);
+      document.removeEventListener('visibilitychange', updateVisibility);
+    };
   }, []);
 
-  const resumeTimer = useCallback(() => {
-    if (prefersReducedMotion) return;
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(goNext, 5000);
-  }, [goNext, prefersReducedMotion]);
+  // Auto-rotate only while visible and not being used. Mobile users advance explicitly.
+  useEffect(() => {
+    if (isPaused || isMobile || prefersReducedMotion || isDocumentHidden || isInteracting) return;
+    const timerId = setInterval(goNext, 5000);
+    return () => clearInterval(timerId);
+  }, [goNext, isDocumentHidden, isInteracting, isMobile, isPaused, prefersReducedMotion]);
 
   const handlePrev = useCallback(() => {
-    pauseTimer();
     goPrev();
-    resumeTimer();
-  }, [pauseTimer, goPrev, resumeTimer]);
+  }, [goPrev]);
 
   const handleNext = useCallback(() => {
-    pauseTimer();
     goNext();
-    resumeTimer();
-  }, [pauseTimer, goNext, resumeTimer]);
+  }, [goNext]);
 
   const handleImageError = useCallback((id: string) => {
     setImageErrors((prev) => new Set(prev).add(id));
   }, []);
 
   return (
-    <div className="flex flex-col justify-end text-center">
+    <div
+      className="flex flex-col justify-end text-center"
+      onFocusCapture={() => setIsInteracting(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setIsInteracting(false);
+      }}
+      onPointerDown={() => setIsInteracting(true)}
+      onPointerUp={() => setIsInteracting(false)}
+      onPointerCancel={() => setIsInteracting(false)}
+    >
       {/* Category title */}
       <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
         {title}
@@ -113,7 +114,7 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
         {/* Left arrow */}
         <button
           onClick={handlePrev}
-          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors cursor-pointer"
+          className="flex-shrink-0 w-8 h-8 max-md:w-11 max-md:h-11 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors cursor-pointer"
           aria-label={`Previous ${title}`}
         >
           ‹
@@ -155,7 +156,7 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
         {/* Right arrow */}
         <button
           onClick={handleNext}
-          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors cursor-pointer"
+          className="flex-shrink-0 w-8 h-8 max-md:w-11 max-md:h-11 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors cursor-pointer"
           aria-label={`Next ${title}`}
         >
           ›

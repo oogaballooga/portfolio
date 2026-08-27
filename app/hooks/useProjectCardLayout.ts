@@ -6,16 +6,19 @@ export interface CardRect {
   projectId: string;
   left: number;
   top: number;
+  width: number;
 }
 
 interface UseProjectCardLayoutReturn {
   cardRects: CardRect[];
+  viewport: { width: number; height: number };
   sectionRef: React.RefObject<HTMLDivElement | null>;
   setPlaceholderRef: (projectId: string, el: HTMLDivElement | null) => void;
 }
 
 export function useProjectCardLayout(cardIds: string[], isPageActive: boolean = true): UseProjectCardLayoutReturn {
   const [cardRects, setCardRects] = useState<CardRect[]>([]);
+  const [viewport, setViewport] = useState({ width: 0, height: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
   const placeholderRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -33,6 +36,7 @@ export function useProjectCardLayout(cardIds: string[], isPageActive: boolean = 
         projectId,
         left: r.left - sectionRect.left + r.width / 2,
         top: r.top - sectionRect.top + r.height / 2,
+        width: r.width,
       });
     });
     setCardRects(rects);
@@ -50,12 +54,20 @@ export function useProjectCardLayout(cardIds: string[], isPageActive: boolean = 
       if (rafId !== null) return;
       rafId = requestAnimationFrame(() => {
         rafId = null;
+        const visualViewport = window.visualViewport;
+        setViewport({
+          width: visualViewport?.width ?? window.innerWidth,
+          height: visualViewport?.height ?? window.innerHeight,
+        });
         measureRects();
       });
     };
+    onResize();
     window.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, [measureRects, isPageActive]);
@@ -79,5 +91,5 @@ export function useProjectCardLayout(cardIds: string[], isPageActive: boolean = 
     [measureRects]
   );
 
-  return { cardRects, sectionRef, setPlaceholderRef };
+  return { cardRects, viewport, sectionRef, setPlaceholderRef };
 }

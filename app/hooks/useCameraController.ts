@@ -12,6 +12,34 @@ import type { TransitionConfig } from '../types/transitions';
 import { getPageSlot, PAGE_SLOTS } from '../data/pages';
 
 const SPRING_CONFIG = { stiffness: 100, damping: 20, mass: 0.5 };
+const SWIPE_THRESHOLD_PX = 50;
+
+function getPageHeight(): number {
+  return window.visualViewport?.height ?? window.innerHeight;
+}
+
+function isInteractiveElement(target: EventTarget | null): boolean {
+  const element = target instanceof Element ? target : null;
+  return Boolean(
+    element?.closest(
+      'a, button, input, textarea, select, option, label, [contenteditable], [role="button"], [role="link"]'
+    )
+  );
+}
+
+function startsInNestedScrollContainer(target: EventTarget | null, page: HTMLElement): boolean {
+  let element = target instanceof HTMLElement ? target : target instanceof Element ? target.parentElement : null;
+
+  while (element && element !== page) {
+    const { overflowY } = window.getComputedStyle(element);
+    if (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') {
+      return true;
+    }
+    element = element.parentElement;
+  }
+
+  return false;
+}
 
 function hashToPageId(hash: string): PageId | null {
   const cleaned = hash.replace('#', '');
@@ -70,7 +98,7 @@ export function useCameraController(
   scrollToTop: (pageId: string) => void,
   resetPage: (pageId: PageId) => void
 ): CameraControllerReturn {
-  const initialPage = 'contact';
+  const initialPage: PageId = 'contact';
 
   const [currentPage, setCurrentPage] = useState<PageId>(initialPage);
   const currentPageRef = useRef<PageId>(initialPage);
@@ -81,15 +109,30 @@ export function useCameraController(
     () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
   );
 
-  const initialY =
-    -getPageSlot(initialPage).yIndex *
-    (typeof window !== 'undefined' ? window.innerHeight : 0);
+  const initialY = 0;
   const cameraY = useMotionValue(initialY);
   const cameraYSpring = useSpring(cameraY, SPRING_CONFIG);
   const reduceMotion = useReducedMotion();
   const isNavigating = useRef(false);
   const navigationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isZoomingRef = useRef(false);
+  const touchRef = useRef<{
+    startX: number;
+    startY: number;
+    pageId: PageId;
+    canNavigateUp: boolean;
+    canNavigateDown: boolean;
+  } | null>(null);
+
+  const restoreInitialHash = useCallback(() => {
+    const hash = window.location.hash;
+    const target = hashToPageId(hash) ?? 'contact';
+    const targetY = -getPageSlot(target).yIndex * getPageHeight();
+    cameraY.set(targetY);
+    cameraYSpring.jump(targetY);
+    currentPageRef.current = target;
+    return target;
+  }, [cameraY, cameraYSpring]);
 
   // Debounce window before allowing the next navigation.
   // Prevents accidental multi-page jumps from a single scroll gesture,
@@ -97,19 +140,18 @@ export function useCameraController(
   // springs handle mid-flight target redirection smoothly.
   const NAVIGATION_DEBOUNCE_MS = 200;
 
-  // On mount, jump to the correct page from the URL hash (before paint, no animation)
+  // Reconcile the hash and viewport before paint in case hydration used a different viewport height.
   useLayoutEffect(() => {
-    const hash = window.location.hash;
-    const target = hashToPageId(hash) ?? 'contact';
-    if (target === 'contact') return;
+    restoreInitialHash();
+  }, [restoreInitialHash]);
 
-    const targetY = -getPageSlot(target).yIndex * window.innerHeight;
-    cameraY.set(targetY);
-    cameraYSpring.set(targetY);
-    setCurrentPage(target);
-    currentPageRef.current = target;
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- cameraY/cameraYSpring are stable motion values
-  }, []);
+  // Framer Motion may initialize after the layout effect; restore the hash target once more next frame.
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setCurrentPage(restoreInitialHash());
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [restoreInitialHash]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 768px)');
@@ -130,7 +172,7 @@ export function useCameraController(
 
       const config = getTransitionConfig(current, target);
       const targetSlot = getPageSlot(target);
-      const targetY = -targetSlot.yIndex * window.innerHeight;
+      const targetY = -targetSlot.yIndex * getPageHeight();
 
       isNavigating.current = true;
       // Reset active cards before changing currentPage. This prevents a
@@ -226,20 +268,28 @@ export function useCameraController(
     };
   }, []);
 
-  // During zoom: recalibrate camera position on every resize tick.
-  // cameraY (MotionValue) is set directly — no spring animation,
-  // no navigateTo — just instant pixel alignment with current vh.
+  // Keep CSS layout and the camera target aligned with the visual viewport.
   useEffect(() => {
     const onResize = () => {
-      if (!isZoomingRef.current) return;
+      const height = getPageHeight();
+      document.documentElement.style.setProperty('--page-height', `${height}px`);
       const current = currentPageRef.current;
-      const targetY = -getPageSlot(current).yIndex * window.innerHeight;
+      const targetY = -getPageSlot(current).yIndex * height;
       cameraY.set(targetY);
       cameraYSpring.set(targetY);
     };
 
+    const visualViewport = window.visualViewport;
+    onResize();
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onResize);
+    visualViewport?.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('orientationchange', onResize);
+      visualViewport?.removeEventListener('resize', onResize);
+      document.documentElement.style.removeProperty('--page-height');
+    };
   }, [cameraY, cameraYSpring]);
 
   useEffect(() => {
@@ -266,6 +316,67 @@ export function useCameraController(
 
     window.addEventListener('wheel', onWheel, { passive: true });
     return () => window.removeEventListener('wheel', onWheel);
+  }, [navigateTo, isAtScrollBoundary]);
+
+  useEffect(() => {
+    const mobileMediaQuery = window.matchMedia('(max-width: 767px) and (pointer: coarse)');
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchRef.current = null;
+      if (!mobileMediaQuery.matches || e.touches.length !== 1 || isInteractiveElement(e.target)) return;
+
+      const page = (e.target instanceof Element ? e.target : null)?.closest<HTMLElement>('.page-shell');
+      const current = currentPageRef.current;
+      if (!page || page.id !== current || startsInNestedScrollContainer(e.target, page)) return;
+
+      const touch = e.touches[0];
+      touchRef.current = {
+        startX: touch.clientX,
+        startY: touch.clientY,
+        pageId: current,
+        canNavigateUp: isAtScrollBoundary(current, 'up'),
+        canNavigateDown: isAtScrollBoundary(current, 'down'),
+      };
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length !== 1) touchRef.current = null;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      const gesture = touchRef.current;
+      touchRef.current = null;
+      if (!gesture || e.changedTouches.length !== 1 || isNavigating.current) return;
+
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - gesture.startX;
+      const deltaY = touch.clientY - gesture.startY;
+      if (Math.abs(deltaY) < SWIPE_THRESHOLD_PX || Math.abs(deltaX) >= Math.abs(deltaY)) return;
+
+      const current = currentPageRef.current;
+      if (current !== gesture.pageId) return;
+      const currentSlot = getPageSlot(current);
+      if (deltaY < 0 && gesture.canNavigateDown && currentSlot.yIndex < PAGE_SLOTS.length - 1) {
+        navigateTo(PAGE_SLOTS[currentSlot.yIndex + 1].id);
+      } else if (deltaY > 0 && gesture.canNavigateUp && currentSlot.yIndex > 0) {
+        navigateTo(PAGE_SLOTS[currentSlot.yIndex - 1].id);
+      }
+    };
+
+    const onTouchCancel = () => {
+      touchRef.current = null;
+    };
+
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onTouchCancel, { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchCancel);
+    };
   }, [navigateTo, isAtScrollBoundary]);
 
   useEffect(() => {

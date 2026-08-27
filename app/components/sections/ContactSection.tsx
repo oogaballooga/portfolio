@@ -32,28 +32,28 @@ export default function ContactSection() {
   const isOffScreen = currentPage !== 'contact';
 
   return (
-    <div className="relative w-full h-screen text-white">
-      <div className="h-full flex items-center justify-center">
-        <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-8">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              <span className="text-gray-300 text-3xl md:text-4xl">
+    <div className="contact-section relative w-full min-h-[var(--page-height)] text-white">
+      <div className="contact-content flex min-h-[var(--page-height)] justify-start py-16 md:items-center md:justify-center md:py-0">
+        <div className="contact-grid max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-12 items-center px-5 md:px-8">
+          <div className="contact-details order-2 md:order-none">
+            <h1 className="text-2xl md:text-6xl font-bold leading-tight">
+              <span className="text-gray-300 text-xl md:text-4xl">
                 {contactContent.greeting}
               </span>
               <br />
               {contactContent.name}
             </h1>
-            <p className="mt-10 text-lg md:text-xl text-gray-400 max-w-sm">
+            <p className="mt-6 md:mt-10 text-sm md:text-xl text-gray-400 max-w-sm">
               {contactContent.introduction}
             </p>
-            <div className="mt-10 flex justify-around max-w-[400px] py-5 px-3 rounded-2xl border border-gray-700 bg-black/30 backdrop-blur-sm">
+            <div className="mt-6 md:mt-10 flex justify-around max-w-[400px] py-2 md:py-5 px-3 rounded-2xl border border-gray-700 bg-black/30 backdrop-blur-sm">
               {contactContent.links.map((link) => (
                 <a
                   key={link.id}
                   href={link.href}
                   target={link.target}
                   rel={link.rel}
-                  className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-white transition-colors group"
+                  className="flex min-w-11 min-h-11 flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-white transition-colors group"
                 >
                   {contactIcons[link.id]}
                   <span className="text-xs font-medium">{link.label}</span>
@@ -62,7 +62,7 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div className="flex justify-center md:justify-end">
+          <div className="contact-portrait order-1 flex justify-center md:order-none md:justify-end">
             <FloatingFlipCard
               content={pfpImages}
               width={288}
@@ -73,7 +73,7 @@ export default function ContactSection() {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-500 text-sm">
+      <div className="contact-scroll-prompt mt-8 text-center text-gray-500 text-sm md:absolute md:bottom-8 md:left-1/2 md:mt-0 md:-translate-x-1/2">
         {contactContent.scrollPrompt}
       </div>
     </div>

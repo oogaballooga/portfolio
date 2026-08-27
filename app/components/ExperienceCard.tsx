@@ -4,14 +4,19 @@ import { CSSProperties, useState, useEffect, useRef, useCallback } from 'react';
 import { useDialogA11y } from '../hooks/useDialogA11y';
 import type { Experience } from '../types/content';
 
+type CardDimension = number | string;
+
 interface ExperienceCardProps {
   experience: Experience;
   restTop: string;
   restLeft: string;
   width?: number;
   height?: number;
-  activeWidth?: number;
-  activeHeight?: number;
+  activeWidth?: CardDimension;
+  activeHeight?: CardDimension;
+  activeTop?: string;
+  useExperienceActiveDimensions?: boolean;
+  useFixedActivePosition?: boolean;
   flipSpeed?: number;
   zIndex?: number;
   isActive: boolean;
@@ -28,6 +33,10 @@ const ACTIVE_HEIGHT = 720;
 
 export { CARD_WIDTH, CARD_HEIGHT, ACTIVE_WIDTH, ACTIVE_HEIGHT };
 
+function toCssDimension(dimension: CardDimension): string {
+  return typeof dimension === 'number' ? `${dimension}px` : dimension;
+}
+
 export default function ExperienceCard({
   experience,
   restTop,
@@ -36,6 +45,9 @@ export default function ExperienceCard({
   height = CARD_HEIGHT,
   activeWidth = ACTIVE_WIDTH,
   activeHeight = ACTIVE_HEIGHT,
+  activeTop = '50%',
+  useExperienceActiveDimensions = true,
+  useFixedActivePosition = false,
   flipSpeed = 0.5,
   zIndex = 1,
   isActive,
@@ -67,8 +79,12 @@ export default function ExperienceCard({
     }
   }, [isActive, flipSpeed]);
 
-  const resolvedActiveWidth = experience.activeWidth ?? activeWidth;
-  const resolvedActiveHeight = experience.activeHeight ?? activeHeight;
+  const resolvedActiveWidth = useExperienceActiveDimensions
+    ? (experience.activeWidth ?? activeWidth)
+    : activeWidth;
+  const resolvedActiveHeight = useExperienceActiveDimensions
+    ? (experience.activeHeight ?? activeHeight)
+    : activeHeight;
   // Apply the active dimensions during the same render as activation. The
   // `expanded` state is intentionally delayed on close so the reverse flip
   // can finish before the wrapper returns to its resting dimensions.
@@ -111,18 +127,18 @@ export default function ExperienceCard({
       aria-expanded={isActive}
       aria-controls={`experience-${experience.id}-detail`}
       style={{
-        position: 'absolute',
-        top: isActive ? '50%' : restTop,
+        position: isActive && useFixedActivePosition ? 'fixed' : 'absolute',
+        top: isActive ? activeTop : restTop,
         left: isActive ? '50%' : restLeft,
-        zIndex: isActive ? zIndex + 50 : zIndex,
+        zIndex: isActive ? 1051 : zIndex,
         transform: 'translate(-50%, -50%)',
         // Keep the card's dimensions fixed during the flip. Animating the
         // wrapper width/height makes the detail content reflow while it is
         // entering, which produces visible line-wrapping jumps.
         transition: 'top 0.4s ease, left 0.4s ease',
         willChange: 'top, left',
-        width: `${currentW}px`,
-        height: `${currentH}px`,
+        width: toCssDimension(currentW),
+        height: toCssDimension(currentH),
         perspective: '1200px',
         pointerEvents: disabled ? 'none' : 'auto',
         ...style,
@@ -160,7 +176,7 @@ export default function ExperienceCard({
             onMouseEnter={() => !isActive && setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >
-            <div className="p-8 w-full h-full flex flex-col justify-between">
+            <div className="p-4 w-full h-full flex flex-col justify-between md:p-8">
               <div>
                 <p className="text-gray-400 text-md uppercase tracking-wide mb-1">
                   {experience.role}
@@ -199,21 +215,21 @@ export default function ExperienceCard({
             style={{
               backgroundColor: '#181818',
               pointerEvents: 'auto',
-              width: `${resolvedActiveWidth}px`,
-              height: `${resolvedActiveHeight}px`,
+              width: toCssDimension(resolvedActiveWidth),
+              height: toCssDimension(resolvedActiveHeight),
             }}
           >
             <div
               ref={detailRef}
               onWheel={handleDetailWheel}
-              className="p-12 w-full h-full flex flex-col overflow-y-auto"
+              className="p-5 w-full h-full flex flex-col overflow-y-auto md:p-12"
             >
               <p className="text-gray-400 text-sm uppercase tracking-wide mb-1">
                 {experience.role}
               </p>
               <h2
                 id={`experience-${experience.id}-detail-title`}
-                className="text-3xl font-bold mb-1"
+                className="text-2xl font-bold mb-1 md:text-3xl"
               >
                 {experience.company}
               </h2>
@@ -267,7 +283,7 @@ export default function ExperienceCard({
                 e.stopPropagation();
                 onDeactivate();
               }}
-              className="absolute top-4 right-4 bg-black text-white border-none rounded-full w-12 h-12 cursor-pointer z-10 flex items-center justify-center text-2xl leading-none hover:bg-[#444] transition-colors"
+              className="detail-close-control absolute top-3 right-3 bg-black text-white border-none rounded-full w-11 h-11 cursor-pointer z-10 flex items-center justify-center text-2xl leading-none hover:bg-[#444] transition-colors md:top-4 md:right-4 md:w-12 md:h-12"
               aria-label="Close detail view"
             >
               ✕

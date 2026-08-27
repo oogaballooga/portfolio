@@ -46,7 +46,7 @@ export default memo(function NavWrapper() {
         <Link
           key={slot.id}
           href={pageIdToHref(slot.id)}
-          className={mounted && currentPage === slot.id ? 'font-bold scale-110' : ''}
+          className={`navbar-link${mounted && currentPage === slot.id ? ' font-bold scale-110' : ''}`}
           aria-current={mounted && currentPage === slot.id ? 'page' : undefined}
           style={{ transition: 'transform 0.2s ease, font-weight 0.2s ease' }}
           onClick={(e) => handleClick(e, slot.id)}

@@ -91,9 +91,9 @@ export function ProjectHeroLinks({ project, theme }: ProjectHeroLinksProps) {
   if (!githubLink && !project.demoVideo && docs.length === 0) return null;
 
   return (
-    <div className="ml-auto mt-4 flex shrink-0 flex-col items-start gap-2.5 sm:mt-16 sm:items-end">
+    <div className="mt-0 flex w-full flex-col items-stretch gap-2.5 md:ml-auto md:mt-16 md:w-auto md:shrink-0 md:items-end">
       {(githubLink || project.demoVideo) && (
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-col gap-2.5 md:flex-row md:flex-wrap md:gap-4">
           {githubLink && (
             <LinkPill
               href={githubLink.url}
@@ -117,7 +117,7 @@ export function ProjectHeroLinks({ project, theme }: ProjectHeroLinksProps) {
         </div>
       )}
       {docs.length > 0 && (
-        <div className="flex flex-wrap gap-2 sm:justify-end">
+        <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:justify-end">
           {docs.map((doc) => (
             <LinkPill
               key={doc.label}

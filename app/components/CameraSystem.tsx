@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useCallback, useRef, useMemo } from 'react';
+import { type CSSProperties, type ReactNode, useCallback, useRef, useMemo } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { CameraProvider } from './CameraContext';
 import { useCameraController } from '../hooks/useCameraController';
@@ -12,11 +12,10 @@ interface CameraSystemProps {
 }
 
 function GhostPageOverlay({ ghost }: { ghost: GhostPage }) {
-  const yOffset = ghost.yIndex * 100;
   return (
     <div
       className="ghost-page"
-      style={{ transform: `translateY(${yOffset}vh)` }}
+      style={{ '--page-index': ghost.yIndex } as CSSProperties}
       aria-hidden="true"
     >
       <span className="ghost-page-label">{ghost.label}</span>
@@ -114,8 +113,8 @@ export default function CameraSystem({ children }: CameraSystemProps) {
       <div className="camera-container">
         <div className="fixed inset-0 -z-10 bg-black" />
         <motion.div
-          className="fixed top-0 left-0 w-full h-[300vh] -z-10 bg-[radial-gradient(circle_at_20%_20%,#333_0%,transparent_40%),radial-gradient(circle_at_80%_30%,#222_0%,transparent_35%),radial-gradient(circle_at_50%_70%,#2a2a2a_0%,transparent_40%)]"
-          style={{ y: backgroundY }}
+          className="fixed top-0 left-0 w-full -z-10 bg-[radial-gradient(circle_at_20%_20%,#333_0%,transparent_40%),radial-gradient(circle_at_80%_30%,#222_0%,transparent_35%),radial-gradient(circle_at_50%_70%,#2a2a2a_0%,transparent_40%)]"
+          style={{ y: backgroundY, height: 'calc(var(--page-height) * 3)' }}
         />
 
         <motion.div className="camera-view" style={{ y: cameraYSpring }}>

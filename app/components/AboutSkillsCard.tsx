@@ -15,12 +15,18 @@ export default function AboutSkillsCard() {
   const rightPanelRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- DOM measurement: must read innerHeight before first paint
-    setVh(window.innerHeight);
+    const getViewportHeight = () =>
+      window.visualViewport?.height ?? window.innerHeight;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- DOM measurement: must read viewport height before first paint
+    setVh(getViewportHeight());
 
-    const onResize = () => setVh(window.innerHeight);
+    const onResize = () => setVh(getViewportHeight());
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
+    };
   }, []);
 
   // Reset scroll positions when user navigates back to this page
@@ -65,15 +71,16 @@ export default function AboutSkillsCard() {
   if (!cameraY || vh === 0) return null;
 
   return (
-    <motion.div
-      className="relative border-4 border-gray-500/50 rounded-2xl bg-black overflow-hidden mx-auto"
-      style={{ scale, opacity, width: '80vw', height: '70vh' }}
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-500/50 h-full">
+    <div className="max-md:flex max-md:justify-center">
+      <motion.div
+        className="about-skills-frame relative border-4 border-gray-500/50 rounded-2xl bg-black overflow-hidden mx-auto"
+        style={{ scale, opacity, width: '80vw', height: 'calc(var(--page-height) * 0.7)' }}
+      >
+      <div className="about-skills-grid grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-500/50 h-full">
         {/* Left: Personal / Professional */}
         <div
           ref={leftPanelRef}
-          className="p-8 lg:p-12 space-y-10 overflow-y-auto card-panel"
+          className="p-5 sm:p-8 lg:p-12 space-y-6 sm:space-y-10 overflow-y-auto card-panel"
           onWheel={handleScrollPanelWheel}
         >
           <div>
@@ -103,7 +110,7 @@ export default function AboutSkillsCard() {
         {/* Right: Skills */}
         <div
           ref={rightPanelRef}
-          className="p-8 lg:p-12 space-y-8 flex flex-col justify-center overflow-y-auto card-panel"
+          className="skills-panel p-5 sm:p-8 lg:p-12 space-y-6 sm:space-y-8 flex flex-col justify-center overflow-y-auto card-panel"
           onWheel={handleScrollPanelWheel}
         >
           <h2 className="text-2xl font-bold text-gray-200">SKILLS</h2>
@@ -128,6 +135,7 @@ export default function AboutSkillsCard() {
           </div>
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

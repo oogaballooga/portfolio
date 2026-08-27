@@ -23,6 +23,8 @@ interface ProjectCardProps {
   height?: number;
   activeWidth?: CardDimension;
   activeHeight?: CardDimension;
+  activeTop?: string;
+  useFixedActivePosition?: boolean;
   flipSpeed?: number;
   zIndex?: number;
   isActive: boolean;
@@ -65,6 +67,8 @@ export default function ProjectCard({
   height = CARD_HEIGHT,
   activeWidth = ACTIVE_WIDTH,
   activeHeight = ACTIVE_HEIGHT,
+  activeTop = '50%',
+  useFixedActivePosition = false,
   flipSpeed = 0.5,
   zIndex = 1,
   isActive,
@@ -100,6 +104,7 @@ export default function ProjectCard({
   const transition = `${flipSpeed}s ease-in-out`;
   const cardIsActive = isActive && isPageActive;
   const cardTransition = isPageActive ? transition : 'none';
+  const activePositionIsFixed = cardIsActive && useFixedActivePosition;
 
   useEffect(() => {
     if (!isActive && detailRef.current) {
@@ -127,10 +132,10 @@ export default function ProjectCard({
   return (
     <div
       style={{
-        position: 'absolute',
-        top: cardIsActive ? '50%' : restTop,
+        position: activePositionIsFixed ? 'fixed' : 'absolute',
+        top: cardIsActive ? activeTop : restTop,
         left: cardIsActive ? '50%' : restLeft,
-        zIndex: cardIsActive ? zIndex + 50 : zIndex,
+        zIndex: cardIsActive ? 1051 : zIndex,
         transform: 'translate(-50%, -50%)',
         width: cardIsActive ? activeWidthCss : `${width}px`,
         height: cardIsActive ? activeHeightCss : `${height}px`,
@@ -174,7 +179,7 @@ export default function ProjectCard({
         onMouseEnter={() => !cardIsActive && setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <div className="flex h-full w-full flex-col justify-between p-8 text-white">
+        <div className="flex h-full w-full flex-col justify-between p-4 text-white md:p-8">
           <div>
             <h2 className="mb-3 text-2xl font-bold">{project.title}</h2>
             <p className="text-sm leading-relaxed text-gray-400">
@@ -245,7 +250,7 @@ export default function ProjectCard({
             event.stopPropagation();
             onDeactivate();
           }}
-          className="absolute right-5 top-5 z-10 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-none bg-[#333] text-3xl text-white transition-colors hover:bg-[#444]"
+          className="detail-close-control absolute right-3 top-3 z-10 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-none bg-[#333] text-2xl text-white transition-colors hover:bg-[#444] md:right-5 md:top-5 md:h-16 md:w-16 md:text-3xl"
           aria-label="Close project detail view"
         >
           ✕

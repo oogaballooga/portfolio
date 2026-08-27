@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, memo, useRef, useEffect } from 'react';
+import { type CSSProperties, type ReactNode, memo, useRef, useEffect } from 'react';
 
 interface PageShellProps {
   yIndex: number;
@@ -33,7 +33,7 @@ export default memo(function PageShell({
       id={pageId}
       ref={scrollRef}
       className="page-shell"
-      style={{ transform: `translateY(${yIndex * 100}vh)` }}
+      style={{ '--page-index': yIndex } as CSSProperties}
     >
       {children}
     </div>

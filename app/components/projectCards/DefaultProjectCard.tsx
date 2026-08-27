@@ -15,19 +15,19 @@ export default function DefaultProjectCard({
 
   return (
     <div
-      className="h-full p-8 sm:p-12"
+      className="h-full p-4 md:p-12"
       style={{ backgroundColor: theme.background }}
     >
       {/* ── Hero ── */}
-      <div className="relative flex items-start gap-8 pb-3 mb-8 sm:pb-0 sm:mb-0">
-        <div className="max-w-4xl shrink-0">
+      <div className="relative flex flex-col items-start gap-4 pb-3 mb-8 md:flex-row md:gap-8 md:pb-0 md:mb-0">
+        <div className="max-w-4xl min-w-0">
           <p
             className="mb-2 text-sm font-semibold uppercase tracking-[0.28em]"
             style={{ color: theme.secondary }}
           >
             {caseStudy.eyebrow}
           </p>
-          <h2 className="text-4xl font-black tracking-tight text-white sm:text-6xl">
+          <h2 className="text-4xl font-black tracking-tight text-white md:text-6xl">
             {project.title}
           </h2>
         </div>
@@ -36,17 +36,17 @@ export default function DefaultProjectCard({
       </div>
 
       <p
-        className="max-w-3xl pb-3 text-lg leading-relaxed sm:mt-6 sm:pb-0 sm:text-xl"
+        className="max-w-3xl pb-3 text-lg leading-relaxed md:mt-6 md:pb-0 md:text-xl"
         style={{ color: theme.mutedText }}
       >
         {caseStudy.heroSummary}
       </p>
 
       {/* ── Content Grid ── */}
-      <div className="mt-4 grid gap-5 sm:mt-[46px] lg:grid-cols-2">
+      <div className="mt-4 grid gap-5 md:mt-[46px] lg:grid-cols-2">
         {keyFeaturesSection && (
           <div
-            className="rounded-3xl p-5 sm:p-6"
+            className="rounded-3xl p-5 md:p-6"
             style={{
               border: `1px solid ${theme.primary}59`,
               backgroundColor: `${theme.panel}e6`,
@@ -62,7 +62,7 @@ export default function DefaultProjectCard({
 
         {architectureSection && (
           <div
-            className="rounded-3xl p-5 sm:p-6"
+            className="rounded-3xl p-5 md:p-6"
             style={{
               border: `1px solid ${theme.secondary}4d`,
               backgroundColor: `${theme.panelAccent}1a`,
@@ -83,7 +83,7 @@ export default function DefaultProjectCard({
           {remainingSections.map((section) => (
             <div
               key={section.heading}
-              className="rounded-3xl p-5 sm:p-6"
+              className="rounded-3xl p-5 md:p-6"
               style={{
                 border: `1px solid ${theme.secondary}4d`,
                 backgroundColor: `${theme.panel}e6`,
@@ -101,7 +101,7 @@ export default function DefaultProjectCard({
 
       {/* ── Takeaway ── */}
       <div
-        className="mt-5 rounded-3xl p-5 pb-3 sm:p-6 sm:pb-4"
+        className="mt-5 rounded-3xl p-5 pb-3 md:p-6 md:pb-4"
         style={{
           border: `1px solid ${theme.secondary}4d`,
           backgroundColor: `${theme.panel}e6`,
@@ -113,7 +113,7 @@ export default function DefaultProjectCard({
         >
           Takeaway
         </p>
-        <p className="text-base leading-8 sm:text-lg" style={{ color: theme.text }}>
+        <p className="text-base leading-8 md:text-lg" style={{ color: theme.text }}>
           {caseStudy.recruiterTakeaway}
         </p>
       </div>

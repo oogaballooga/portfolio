@@ -30,11 +30,11 @@ export default function AcademicsSection() {
       className="relative w-full min-h-screen text-white"
       onClick={handleBackgroundClick}
     >
-      <div className="max-w-[90rem] mx-auto px-8 pt-24 pb-16">
+      <div className="max-w-[90rem] mx-auto px-4 pt-12 pb-16 md:px-8 md:pt-24">
         <h1 className="text-2xl font-bold mb-8">Degrees</h1>
 
         {/* Degree Cards */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,670px))] justify-center gap-8 mb-20">
+        <div className="grid grid-cols-1 justify-center max-md:justify-items-center gap-8 mb-20 md:grid-cols-[repeat(auto-fit,minmax(300px,670px))] max-md:[&>div]:max-w-full">
           <DegreeCard
             degree={mastersEducation.degree}
             school={mastersEducation.school}

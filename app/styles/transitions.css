@@ -13,7 +13,7 @@
   perspective: var(--camera-perspective);
   perspective-origin: center center;
   overflow: hidden;
-  height: 100vh;
+  height: var(--page-height);
   width: 100vw;
 }
 
@@ -35,7 +35,8 @@
   overflow-y: auto;
   overflow-x: hidden;
   content-visibility: auto;
-  contain-intrinsic-size: 100vw 100vh;
+  contain-intrinsic-size: 100vw var(--page-height);
+  transform: translateY(calc(var(--page-index) * var(--page-height)));
 }
 
 /* Ghost pages: lightweight placeholders for distant fly-throughs */
@@ -51,6 +52,7 @@
   opacity: 0.4;
   pointer-events: none;
   user-select: none;
+  transform: translateY(calc(var(--page-index) * var(--page-height)));
 }
 
 .ghost-page-label {
