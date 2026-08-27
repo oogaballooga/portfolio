@@ -145,9 +145,9 @@ body {
   }
 
   .contact-portrait {
-    --contact-portrait-height: clamp(0px, calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 21rem), min(426.6667px, 100vw));
+    --contact-portrait-height: clamp(0px, calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 21.75rem), min(426.6667px, 100vw));
     position: absolute;
-    top: min(30dvh, calc(100dvh - env(safe-area-inset-bottom, 0px) - 21rem - (var(--contact-portrait-height) / 2)));
+    top: min(30dvh, calc(100dvh - env(safe-area-inset-bottom, 0px) - 21.75rem - (var(--contact-portrait-height) / 2)));
     left: 0;
     right: 0;
     transform: translateY(-50%);
@@ -168,6 +168,10 @@ body {
     width: calc(100vw - 2.5rem);
     max-width: 400px;
     text-align: left;
+  }
+
+  .contact-details h1 + p {
+    margin-top: 0.75rem;
   }
 
   .contact-details > div {

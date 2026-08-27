@@ -130,6 +130,7 @@
     align-items: start;
     transition:
       grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      row-gap 0.4s cubic-bezier(0.4, 0, 0.2, 1),
       padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
       background-color 0.4s ease,
       border-color 0.4s ease;
@@ -137,9 +138,10 @@
 
   .course-card-wrapper .course-card.active {
     grid-template-rows: auto minmax(0, 1fr);
+    row-gap: 5px;
     padding: 16px;
     overflow: hidden;
-    transition-delay: 0s, 0s, 0s, 0s;
+    transition-delay: 0s, 0s, 0s, 0s, 0s;
   }
 
   .course-card-wrapper .title-wrapper {
