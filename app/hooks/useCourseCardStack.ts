@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useCardZStack } from './useCardZStack';
 
 interface CardProps {
   isActive: boolean;
@@ -15,8 +16,7 @@ interface UseCourseCardStackReturn {
 
 export function useCourseCardStack(): UseCourseCardStackReturn {
   const [activeCourseId, setActiveCourseId] = useState<string | null>(null);
-  const [currZIndex, setCurrZIndex] = useState(100);
-  const [cardZ, setCardZ] = useState<Record<string, number>>({});
+  const { activateCard, getZIndex } = useCardZStack(100);
 
   const deactivateAll = useCallback(() => {
     setActiveCourseId(null);
@@ -26,30 +26,24 @@ export function useCourseCardStack(): UseCourseCardStackReturn {
     (id: string): CardProps => {
       const isActive = activeCourseId === id;
 
-      // Use functional form to compute zIndex on activation without
-      // needing activeCourseId or cardZ in the dependency closure.
       const activate = () => {
         if (isActive) {
           deactivateAll();
           return;
         }
 
-        setCurrZIndex((prev) => {
-          const next = prev + 1;
-          setCardZ((z) => ({ ...z, [id]: next }));
-          return next;
-        });
+        activateCard(id);
         setActiveCourseId(id);
       };
 
       return {
         isActive,
-        zIndex: cardZ[id] ?? 1,
+        zIndex: getZIndex(id),
         onActivate: activate,
         onDeactivate: deactivateAll,
       };
     },
-    [activeCourseId, cardZ, deactivateAll]
+    [activeCourseId, activateCard, getZIndex, deactivateAll]
   );
 
   return { activeCourseId, getCardProps, deactivateAll };

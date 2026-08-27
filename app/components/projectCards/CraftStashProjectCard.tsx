@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import { CaseStudySection } from './CaseStudySection';
 import { ProjectHeroLinks } from './ProjectHeroLinks';
 import type { ProjectCardDetailProps } from './types';
@@ -51,13 +52,15 @@ export default function CraftStashProjectCard({
                 boxShadow: `0 0 0 2px ${theme.primary}, 0 0 40px ${theme.primary}99, 0 0 80px ${theme.primary}55`,
               }}
             >
-              {iconError ? (
+              {iconError || !theme.iconImage ? (
                 <span className="text-3xl font-black text-white">CS</span>
               ) : (
-                <img
+                <Image
+                  fill
+                  sizes="100px"
                   src={theme.iconImage}
                   alt=""
-                  className="h-full w-full rounded-[1.6rem] object-cover"
+                  className="rounded-[1.6rem] object-cover"
                   onError={() => setIconError(true)}
                 />
               )}

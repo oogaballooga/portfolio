@@ -1,6 +1,7 @@
 'use client';
 
 import { CSSProperties, useState, useEffect, useRef, useCallback } from 'react';
+import { useDialogA11y } from '../hooks/useDialogA11y';
 import type { Experience } from '../types/content';
 
 interface ExperienceCardProps {
@@ -51,12 +52,14 @@ export default function ExperienceCard({
   useEffect(() => {
     if (isActive !== prevActiveRef.current) {
       prevActiveRef.current = isActive;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- incrementing flip counter on prop change is a legitimate sync
       setRotationIndex((r) => r + 1);
     }
   }, [isActive]);
 
   useEffect(() => {
     if (isActive) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- expanding card on activation is a legitimate sync
       setExpanded(true);
     } else {
       const timer = setTimeout(() => setExpanded(false), flipSpeed * 1000);
@@ -98,9 +101,15 @@ export default function ExperienceCard({
     },
     []
   );
+  const { containerRef, closeButtonRef } =
+    useDialogA11y({ isActive, onClose: onDeactivate });
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-expanded={isActive}
+      aria-controls={`experience-${experience.id}-detail`}
       style={{
         position: 'absolute',
         top: isActive ? '50%' : restTop,
@@ -121,6 +130,12 @@ export default function ExperienceCard({
       onClick={(e) => {
         e.stopPropagation();
         if (!isActive) onActivate();
+      }}
+      onKeyDown={(e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !isActive) {
+          e.preventDefault();
+          onActivate();
+        }
       }}
     >
       <div
@@ -173,8 +188,13 @@ export default function ExperienceCard({
         </div>
 
         {/* Back face */}
-        <div className="face back">
+        <div className="face back" inert={!isActive}>
           <div
+            ref={containerRef}
+            id={`experience-${experience.id}-detail`}
+            role={isActive ? 'dialog' : undefined}
+            aria-modal={isActive ? true : undefined}
+            aria-labelledby={`experience-${experience.id}-detail-title`}
             className="border-4 border-gray-500/50 rounded-2xl flex flex-col text-white relative overflow-hidden"
             style={{
               backgroundColor: '#181818',
@@ -191,7 +211,12 @@ export default function ExperienceCard({
               <p className="text-gray-400 text-sm uppercase tracking-wide mb-1">
                 {experience.role}
               </p>
-              <h2 className="text-3xl font-bold mb-1">{experience.company}</h2>
+              <h2
+                id={`experience-${experience.id}-detail-title`}
+                className="text-3xl font-bold mb-1"
+              >
+                {experience.company}
+              </h2>
               {experience.location && (
                 <p className="text-gray-500 text-sm mb-2">{experience.location}</p>
               )}
@@ -236,6 +261,8 @@ export default function ExperienceCard({
               </div>
             </div>
             <button
+              type="button"
+              ref={closeButtonRef}
               onClick={(e) => {
                 e.stopPropagation();
                 onDeactivate();

@@ -191,22 +191,54 @@ body.ctrl-zoom-active .card-panel {
   overflow-y: hidden !important;
 }
 
-/* Reduced motion: disable all 3D and animations */
+/* Reduced motion: retain camera translation while removing decorative 3D and effects. */
 @media (prefers-reduced-motion: reduce) {
+  .camera-container,
+  .flip-scene {
+    perspective: none;
+  }
+
   .camera-view {
     transition: none !important;
+    transform-style: flat;
   }
 
   .ghost-page {
     display: none !important;
   }
 
+  .flip-card,
   .flip-card.flipped {
+    transform: none !important;
+    transform-style: flat;
     transition: none !important;
+  }
+
+  .flip-card .face.back {
+    display: none;
+  }
+
+  .flip-card:has(.face.back:not([inert])) .face:not(.back) {
+    display: none;
+  }
+
+  .flip-card .face.back:not([inert]) {
+    display: flex;
   }
 
   .float-wrapper {
     animation: none !important;
+    transform: none !important;
+    transform-style: flat;
+  }
+
+  .glow-grain,
+  .glow-grain-lg {
+    box-shadow: none;
+  }
+
+  .glow-grain::after {
+    display: none;
   }
 
   .page-shell {

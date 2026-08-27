@@ -2,6 +2,7 @@
 
 import {
   type CSSProperties,
+  createElement,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -9,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { getProjectCardDetail } from './projectCards';
+import { useDialogA11y } from '../hooks/useDialogA11y';
 import type { Project } from '../types/content';
 
 type CardDimension = number | string;
@@ -75,7 +77,10 @@ export default function ProjectCard({
   const [hovered, setHovered] = useState(false);
   const [viewport, setViewport] = useState({ width: 0, height: 0 });
   const detailRef = useRef<HTMLDivElement>(null);
-  const Detail = getProjectCardDetail(project.id);
+  const { containerRef, closeButtonRef } = useDialogA11y({
+    isActive,
+    onClose: onDeactivate,
+  });
 
   useLayoutEffect(() => {
     const updateViewport = () =>
@@ -136,11 +141,22 @@ export default function ProjectCard({
         borderRadius: '1rem',
         overflow: 'hidden',
         pointerEvents: disabled ? 'none' : 'auto',
+        cursor: cardIsActive ? 'default' : 'pointer',
         ...style,
       }}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isActive}
+      aria-controls={`${project.id}-detail`}
       onClick={(event) => {
         event.stopPropagation();
         if (!isActive) onActivate();
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          if (!isActive) onActivate();
+        }
       }}
     >
       <div
@@ -184,6 +200,12 @@ export default function ProjectCard({
       </div>
 
       <div
+        ref={containerRef}
+        id={`${project.id}-detail`}
+        inert={!cardIsActive}
+        role={cardIsActive ? 'dialog' : undefined}
+        aria-modal={cardIsActive ? true : undefined}
+        aria-labelledby={`${project.id}-detail-title`}
         style={{
           position: 'absolute',
           inset: 0,
@@ -192,6 +214,9 @@ export default function ProjectCard({
           pointerEvents: cardIsActive ? 'auto' : 'none',
         }}
       >
+        <h2 id={`${project.id}-detail-title`} className="sr-only">
+          {project.title}
+        </h2>
         <div
           style={{
             position: 'absolute',
@@ -209,13 +234,13 @@ export default function ProjectCard({
             onWheel={handleDetailWheel}
             className="h-full w-full overflow-y-auto"
           >
-            <Detail
-              project={project}
-            />
+            {createElement(getProjectCardDetail(project.id), { project })}
           </div>
         </div>
 
         <button
+          type="button"
+          ref={closeButtonRef}
           onClick={(event) => {
             event.stopPropagation();
             onDeactivate();

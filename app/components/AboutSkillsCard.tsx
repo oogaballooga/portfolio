@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { useCameraContext } from './CameraContext';
 import { skills } from '../data/skills';
-import { personalText, professionalText } from '../data/aboutMe';
+import { getPersonalText, professionalText } from '../data/aboutMe';
 import { interests } from '../data/interests';
 import InterestCarousel from './InterestCarousel';
 
@@ -14,7 +14,8 @@ export default function AboutSkillsCard() {
   const leftPanelRef = useRef<HTMLDivElement>(null);
   const rightPanelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- DOM measurement: must read innerHeight before first paint
     setVh(window.innerHeight);
 
     const onResize = () => setVh(window.innerHeight);
@@ -78,7 +79,7 @@ export default function AboutSkillsCard() {
           <div>
             <h2 className="text-2xl font-bold text-gray-200 mb-4">PERSONAL</h2>
             <p className="text-lg text-gray-300 leading-relaxed">
-              {personalText}
+              {getPersonalText()}
             </p>
           </div>
 

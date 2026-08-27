@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface DegreeCardProps {
   degree: string;
   school: string;
@@ -44,8 +46,10 @@ export default function DegreeCard({
           )}
         </div>
         {logo && (
-          <img
+          <Image
             src={logo}
+            width={200}
+            height={200}
             alt={`${school} Crest`}
             className="absolute bottom-2 right-4 sm:bottom-4 sm:right-12 md:bottom-8 md:right-20 w-16 sm:w-28 md:w-40 opacity-85"
           />

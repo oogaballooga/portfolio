@@ -7,7 +7,6 @@ export interface ProjectDetailTheme {
   mutedText: string;
   panel: string;
   panelAccent: string;
-  patternImage?: string;
   iconImage?: string;
 }
 
@@ -89,7 +88,7 @@ export type PageId = 'contact' | 'aboutSkills' | 'academics' | 'projects' | 'exp
 export interface PageSlot {
   id: PageId;
   label: string;
-  route: string;
+  route: string;         // Hash URL (e.g., '/#aboutSkills', '/#academics')
   yIndex: number;
 }
 

@@ -12,7 +12,6 @@ interface CourseCardProps {
   isActive: boolean;
   zIndex: number;
   onActivate: () => void;
-  onDeactivate: () => void;
 }
 
 export default function CourseCard({

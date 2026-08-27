@@ -31,7 +31,7 @@ export default function AcademicsSection() {
       onClick={handleBackgroundClick}
     >
       <div className="max-w-[90rem] mx-auto px-8 pt-24 pb-16">
-        <h2 className="text-2xl font-bold mb-8">Degrees</h2>
+        <h1 className="text-2xl font-bold mb-8">Degrees</h1>
 
         {/* Degree Cards */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,670px))] justify-center gap-8 mb-20">
@@ -72,7 +72,6 @@ export default function AcademicsSection() {
                 isActive={isActive}
                 zIndex={zIndex}
                 onActivate={onActivate}
-                onDeactivate={deactivateAll}
               />
             );
           })}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import type { InterestCategory } from '../data/interests';
 
@@ -25,15 +25,26 @@ const slideVariants = {
   }),
 };
 
+const reducedMotionSlideVariants = {
+  enter: { x: 0, opacity: 1 },
+  center: { x: 0, opacity: 1 },
+  exit: { x: 0, opacity: 1 },
+};
+
 export default function InterestCarousel({ category, isPaused = false }: InterestCarouselProps) {
   const { title, items } = category;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const itemCount = items.length;
   const currentItem = items[currentIndex];
+  const carouselVariants = prefersReducedMotion ? reducedMotionSlideVariants : slideVariants;
+  const carouselTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.35, ease: 'easeInOut' as const };
 
   const goTo = useCallback(
     (index: number, dir: number) => {
@@ -48,7 +59,7 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
 
   // Auto-rotate every 5 seconds (paused when section is off-screen)
   useEffect(() => {
-    if (isPaused) {
+    if (isPaused || prefersReducedMotion) {
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -59,7 +70,7 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [goNext, isPaused]);
+  }, [goNext, isPaused, prefersReducedMotion]);
 
   const pauseTimer = useCallback(() => {
     if (timerRef.current) {
@@ -69,9 +80,10 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
   }, []);
 
   const resumeTimer = useCallback(() => {
+    if (prefersReducedMotion) return;
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(goNext, 5000);
-  }, [goNext]);
+  }, [goNext, prefersReducedMotion]);
 
   const handlePrev = useCallback(() => {
     pauseTimer();
@@ -113,11 +125,11 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
             <motion.div
               key={currentItem.id}
               custom={direction}
-              variants={slideVariants}
-              initial="enter"
+              variants={carouselVariants}
+              initial={prefersReducedMotion ? false : 'enter'}
               animate="center"
               exit="exit"
-              transition={{ duration: 0.35, ease: 'easeInOut' }}
+              transition={carouselTransition}
               className="absolute inset-0"
             >
               {imageErrors.has(currentItem.id) ? (
@@ -153,16 +165,16 @@ export default function InterestCarousel({ category, isPaused = false }: Interes
       {/* Item name with slide animation */}
       <div className="relative h-5 overflow-hidden">
         <AnimatePresence mode="wait" custom={direction}>
-          <motion.p
-            key={currentItem.id}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
-            className="text-white font-semibold text-sm absolute inset-x-0"
-          >
+            <motion.p
+              key={currentItem.id}
+              custom={direction}
+              variants={carouselVariants}
+              initial={prefersReducedMotion ? false : 'enter'}
+              animate="center"
+              exit="exit"
+              transition={carouselTransition}
+              className="text-white font-semibold text-sm absolute inset-x-0"
+            >
             {currentItem.name}
           </motion.p>
         </AnimatePresence>

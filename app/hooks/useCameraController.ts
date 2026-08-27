@@ -1,7 +1,12 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect, useLayoutEffect } from 'react';
-import { useMotionValue, useSpring, type MotionValue } from 'framer-motion';
+import {
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+  type MotionValue,
+} from 'framer-motion';
 import type { PageId, CameraDirection, GhostPage } from '../types/content';
 import type { TransitionConfig } from '../types/transitions';
 import { getPageSlot, PAGE_SLOTS } from '../data/pages';
@@ -65,21 +70,23 @@ export function useCameraController(
   scrollToTop: (pageId: string) => void,
   resetPage: (pageId: PageId) => void
 ): CameraControllerReturn {
-  const initialPage = hashToPageId(
-''
-  ) ?? 'contact';
+  const initialPage = 'contact';
 
   const [currentPage, setCurrentPage] = useState<PageId>(initialPage);
   const currentPageRef = useRef<PageId>(initialPage);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [direction, setDirection] = useState<CameraDirection>('none');
   const [ghostPages, setGhostPages] = useState<GhostPage[]>([]);
+  const [canRenderGhosts, setCanRenderGhosts] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+  );
 
   const initialY =
     -getPageSlot(initialPage).yIndex *
     (typeof window !== 'undefined' ? window.innerHeight : 0);
   const cameraY = useMotionValue(initialY);
   const cameraYSpring = useSpring(cameraY, SPRING_CONFIG);
+  const reduceMotion = useReducedMotion();
   const isNavigating = useRef(false);
   const navigationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isZoomingRef = useRef(false);
@@ -101,6 +108,19 @@ export function useCameraController(
     cameraYSpring.set(targetY);
     setCurrentPage(target);
     currentPageRef.current = target;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- cameraY/cameraYSpring are stable motion values
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    const updateGhostRendering = () => {
+      setCanRenderGhosts(mediaQuery.matches);
+      if (!mediaQuery.matches) setGhostPages([]);
+    };
+
+    updateGhostRendering();
+    mediaQuery.addEventListener('change', updateGhostRendering);
+    return () => mediaQuery.removeEventListener('change', updateGhostRendering);
   }, []);
 
   const navigateTo = useCallback(
@@ -128,7 +148,7 @@ export function useCameraController(
       currentPageRef.current = target;
       setDirection(config.direction);
 
-      if (config.useGhosts) {
+      if (config.useGhosts && canRenderGhosts && !reduceMotion) {
         setGhostPages(config.ghostPages);
       }
 
@@ -136,6 +156,9 @@ export function useCameraController(
       setCurrentPage(target);
       scrollToTop(target);
       cameraY.set(targetY);
+      if (reduceMotion) {
+        cameraYSpring.jump(targetY);
+      }
 
       if (typeof window !== 'undefined') {
         const hash = pageIdToHash(target);
@@ -152,7 +175,7 @@ export function useCameraController(
         setGhostPages([]);
       }, visualDuration);
     },
-    [cameraY, resetPage, scrollToTop]
+    [cameraY, cameraYSpring, canRenderGhosts, reduceMotion, resetPage, scrollToTop]
   );
 
   useEffect(() => {
@@ -243,6 +266,46 @@ export function useCameraController(
 
     window.addEventListener('wheel', onWheel, { passive: true });
     return () => window.removeEventListener('wheel', onWheel);
+  }, [navigateTo, isAtScrollBoundary]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      const current = currentPageRef.current;
+      const currentSlot = getPageSlot(current);
+
+      if (e.key === 'ArrowDown') {
+        if (
+          currentSlot.yIndex < PAGE_SLOTS.length - 1 &&
+          isAtScrollBoundary(current, 'down')
+        ) {
+          e.preventDefault();
+          navigateTo(PAGE_SLOTS[currentSlot.yIndex + 1].id);
+        }
+      } else if (
+        currentSlot.yIndex > 0 &&
+        isAtScrollBoundary(current, 'up')
+      ) {
+        e.preventDefault();
+        navigateTo(PAGE_SLOTS[currentSlot.yIndex - 1].id);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [navigateTo, isAtScrollBoundary]);
 
   return {

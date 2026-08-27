@@ -39,6 +39,7 @@ export function useProjectCardLayout(cardIds: string[], isPageActive: boolean = 
   }, []);
 
   useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- DOM measurement: must read positions before paint
     measureRects();
   }, [measureRects]);
 

@@ -20,7 +20,3 @@ export const experiences: Experience[] = [
     skills: ['React', 'Microsoft AI Studio', 'Scripting', 'Process Automation'],
   },
 ];
-
-export function getExperienceBySlug(slug: string): Experience | undefined {
-  return experiences.find((e) => e.slug === slug);
-}

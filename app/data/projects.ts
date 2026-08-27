@@ -93,7 +93,6 @@ export const projects: Project[] = [
         mutedText: '#C8E2F8',
         panel: '#101418',
         panelAccent: '#4594D6',
-        patternImage: '/images/craft-stash/blue_plaid_pattern.png',
         iconImage: '/projectDocs/craft-stash/icon.webp',
       },
     },
@@ -130,7 +129,7 @@ export const projects: Project[] = [
           items: [
             'Framer Motion springs drive all navigation; CSS keyframes handle only ambient glow.',
             'Animation stays GPU-composited by transforming position, opacity, and filter only.',
-            'Server components stream static content while client islands own the camera.',
+            'The page is a single client component; all animation and navigation state lives in React hooks.',
             'Typed data files drive generic card blueprints, so content never lives in components.',
           ],
         },
@@ -154,7 +153,3 @@ export const projects: Project[] = [
     featured: true,
   },
 ];
-
-export function getProjectBySlug(slug: string): Project | undefined {
-  return projects.find((p) => p.slug === slug);
-}

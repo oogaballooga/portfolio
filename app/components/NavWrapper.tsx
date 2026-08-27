@@ -3,6 +3,7 @@
 import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCameraContext } from './CameraContext';
+import { useSectionTabCycle } from '../hooks/useSectionTabCycle';
 import { PAGE_SLOTS } from '../data/pages';
 import type { PageId } from '../types/content';
 
@@ -20,7 +21,9 @@ function pageIdToHref(pageId: PageId): string {
 
 export default memo(function NavWrapper() {
   const { currentPage, navigateTo, resetPage } = useCameraContext();
+  useSectionTabCycle(currentPage);
   const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR hydration guard: mount flag must flip once after hydration
   useEffect(() => setMounted(true), []);
 
   const handleClick = (e: React.MouseEvent, pageId: PageId) => {
@@ -44,6 +47,7 @@ export default memo(function NavWrapper() {
           key={slot.id}
           href={pageIdToHref(slot.id)}
           className={mounted && currentPage === slot.id ? 'font-bold scale-110' : ''}
+          aria-current={mounted && currentPage === slot.id ? 'page' : undefined}
           style={{ transition: 'transform 0.2s ease, font-weight 0.2s ease' }}
           onClick={(e) => handleClick(e, slot.id)}
         >

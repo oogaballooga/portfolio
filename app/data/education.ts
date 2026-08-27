@@ -9,7 +9,7 @@ export const mastersEducation: Education = {
   endDate: 'Dec 2026',
   gpa: 3.7,
   honors: ['Student Grader'],
-  logo: 'images/seattleuCrest.webp',
+  logo: '/images/seattleuCrest.webp',
 };
 
 export const bachelorsEducation: Education = {
@@ -21,7 +21,7 @@ export const bachelorsEducation: Education = {
   endDate: 'Dec 2025',
   gpa: 3.8,
   honors: ["6x Quarterly Dean's List", "Magna Cum Laude"],
-  logo: 'images/seattleuCrest.webp',
+  logo: '/images/seattleuCrest.webp',
 };
 
 export const courses: Course[] = [
@@ -41,7 +41,7 @@ export const courses: Course[] = [
     id: 'artificial-intelligence',
     title: 'Artificial Intelligence',
     description:
-      'Covered search algorithms, game theory, heuristic optimization strategies, uncertainty, game-tree search (minimax with pruning), and more. Followed the UC Berkley AI Pacman exercises.',
+      'Covered search algorithms, game theory, heuristic optimization strategies, uncertainty, game-tree search (minimax with pruning), and more. Followed the UC Berkeley AI Pacman exercises.',
   },
   {
     id: 'machine-learning',

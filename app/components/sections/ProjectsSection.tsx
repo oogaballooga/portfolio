@@ -10,12 +10,12 @@ import ProjectCard, {
 } from '../ProjectCard';
 import { projects } from '../../data/projects';
 import { useProjectCardLayout } from '../../hooks/useProjectCardLayout';
+import { useCardZStack } from '../../hooks/useCardZStack';
 import { useCameraContext } from '../CameraContext';
 
 export default function ProjectsSection() {
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [zCounter, setZCounter] = useState(1);
-  const [cardZ, setCardZ] = useState<Record<string, number>>({});
+  const { activateCard, getZIndex } = useCardZStack();
 
   const { currentPage, registerPageReset } = useCameraContext();
   const projectIds = useMemo(() => projects.map((p) => p.id), []);
@@ -23,11 +23,7 @@ export default function ProjectsSection() {
     useProjectCardLayout(projectIds, currentPage === 'projects');
 
   const activate = (id: string) => {
-    setZCounter((prev) => {
-      const next = prev + 1;
-      setCardZ((z) => ({ ...z, [id]: next }));
-      return next;
-    });
+    activateCard(id);
     setActiveId(id);
   };
 
@@ -36,6 +32,7 @@ export default function ProjectsSection() {
   // Deactivate project cards whenever the camera leaves the projects page.
   useEffect(() => {
     if (currentPage !== 'projects') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- deactivation on navigation is a legitimate lifecycle sync
       deactivate();
     }
   }, [currentPage, deactivate]);
@@ -49,7 +46,8 @@ export default function ProjectsSection() {
   return (
     <div ref={sectionRef} className="relative w-full min-h-screen text-white">
       <div className="max-w-[90rem] mx-auto px-8 pt-24 pb-16">
-        <h1 className="text-4xl font-bold mb-12">Projects</h1>
+        <h1 className="text-4xl font-bold mb-2">Projects</h1>
+        <p className="text-gray-500 text-sm mb-6">Click card for more information</p>
 
         {/* Invisible grid for layout measurement only */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-8">
@@ -96,7 +94,7 @@ export default function ProjectsSection() {
             activeHeight={ACTIVE_HEIGHT}
             isActive={isActive}
             isPageActive={currentPage === 'projects'}
-            zIndex={cardZ[project.id] ?? 1}
+            zIndex={getZIndex(project.id)}
             onActivate={() => activate(project.id)}
             onDeactivate={deactivate}
             disabled={activeId !== null && !isActive}
