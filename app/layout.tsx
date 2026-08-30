@@ -10,11 +10,11 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'Oscar Eriksen — CS Graduate Student',
+  title: 'Oscar Eriksen Portfolio',
   description:
     'Personal portfolio of Oscar Eriksen, M.S. Computer Science graduate student at Seattle University.',
   openGraph: {
-    title: 'Oscar Eriksen — CS Graduate Student',
+    title: 'Oscar Eriksen Portfolio',
     description:
       'Personal portfolio showcasing projects, experience, and skills.',
     type: 'website',
@@ -24,13 +24,13 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Oscar Eriksen — CS Graduate Student',
+        alt: 'Oscar Eriksen Portfolio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Oscar Eriksen — CS Graduate Student',
+    title: 'Oscar Eriksen Portfolio',
     description:
       'Personal portfolio showcasing projects, experience, and skills.',
     images: ['/og-image.png'],

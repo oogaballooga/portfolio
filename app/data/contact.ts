@@ -17,7 +17,11 @@ export const contactContent = {
   introduction: 'M.S. Computer Science graduate student at Seattle University.',
   scrollPrompt: '↓ Scroll down for more ↓',
   links: [
-    { id: 'email', href: 'mailto:oscy105@gmail.com', label: 'Email' },
+    {
+      id: 'email',
+      href: 'mailto:oscareriksen.work@gmail.com',
+      label: 'Email',
+    },
     { id: 'linkedin', href: 'https://linkedin.com/in/ooga', label: 'LinkedIn' },
     { id: 'github', href: 'https://github.com/oogaballooga', label: 'GitHub' },
     {
