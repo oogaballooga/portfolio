@@ -101,6 +101,76 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    id: 'slashbin',
+    slug: 'slashbin',
+    title: 'SlashBin',
+    shortDescription:
+      'Voice-activated autonomous smart bin that finds a caller and navigates to them in simulation.',
+    inactiveCallout: 'Simulation demo available',
+    description:
+      'Built a ROS 2 autonomous robot simulation that combines voice commands, person detection, omni-wheel control, and Nav2 path planning. SlashBin searches for a person after hearing a wake command, approaches them using RGB-D perception, and returns to its home pose when dismissed.',
+    skills: [
+      'Robotics software development',
+      'Autonomous navigation',
+      'Computer vision',
+      'Voice interaction',
+      'Motion control',
+    ],
+    tech: ['ROS 2', 'Gazebo', 'Nav2', 'C++', 'Python'],
+    images: [],
+    links: [{ label: 'GitHub', url: 'https://github.com/oogaballooga/SlashBin' }],
+    demoVideo:
+      'https://github.com/oogaballooga/SlashBin/blob/main/media/slashbin_final_demo.mp4',
+    caseStudy: {
+      eyebrow: 'ROS 2 · Gazebo · Nav2 · YOLO · Vosk',
+      heroSummary:
+        'A simulated autonomous smart bin that responds to voice commands, locates a person with RGB-D vision, and navigates to them before returning home.',
+      sections: [
+        {
+          heading: 'Key features',
+          items: [
+            'Voice commands start a person-search flow or send the robot back home.',
+            'YOLO-based person detection is confirmed across multiple frames before navigation begins.',
+            'Depth data estimates the person’s position and preserves a comfortable approach distance.',
+            'Nav2 handles planning and recovery while the robot moves through a mapped Gazebo world.',
+          ],
+        },
+        {
+          heading: 'System architecture',
+          body:
+            'Separate ROS 2 nodes coordinate speech recognition, perception, navigation, and low-level motion control through a shared robot-state topic.',
+          items: [
+            'Vosk recognizes the wake and dismiss phrases.',
+            'YOLO processes synchronized camera and depth streams.',
+            'A C++ kinematics node converts velocity commands into omni-wheel motion and publishes odometry.',
+          ],
+        },
+        {
+          heading: 'Engineering decisions',
+          items: [
+            'Required consecutive high-confidence detections to avoid reacting to a single false positive.',
+            'Cancelled active navigation goals before issuing the home goal so the robot can safely change intent.',
+            'Used Gazebo simulation to validate perception, navigation, and controller integration in one repeatable environment.',
+          ],
+        },
+      ],
+      recruiterTakeaway:
+        'This project demonstrates that I can connect perception, stateful interaction, motion control, and autonomous navigation into a cohesive robotics system.',
+      theme: {
+        background: '#16263A',
+        primary: '#79A9D2',
+        secondary: '#B8D8F0',
+        text: '#EEF7FF',
+        mutedText: '#C6DCEF',
+        panel: '#1C324A',
+        panelAccent: '#365C7D',
+      },
+    },
+    activeWidth: 1000,
+    activeHeight: 800,
+    featured: true,
+  },
+  {
     id: 'portfolio-website',
     slug: 'portfolio-website',
     title: 'Portfolio Website',
