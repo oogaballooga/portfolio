@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { CaseStudySection } from './CaseStudySection';
 import { ProjectHeroLinks } from './ProjectHeroLinks';
 import type { ProjectCardDetailProps } from './types';
@@ -31,6 +32,18 @@ export default function DefaultProjectCard({
             {project.title}
           </h2>
         </div>
+
+        {theme.heroImage && (
+          <div className="relative h-32 w-24 self-center md:absolute md:left-1/2 md:top-10 md:-translate-x-1/2">
+            <Image
+              fill
+              sizes="96px"
+              src={theme.heroImage}
+              alt={`${project.title} project visual`}
+              className="object-contain"
+            />
+          </div>
+        )}
 
         <ProjectHeroLinks project={project} theme={theme} />
       </div>

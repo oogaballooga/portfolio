@@ -8,6 +8,7 @@ export interface ProjectDetailTheme {
   panel: string;
   panelAccent: string;
   iconImage?: string;
+  heroImage?: string;
 }
 
 export interface ProjectCaseStudySection {

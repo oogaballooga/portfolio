@@ -106,7 +106,7 @@ export const projects: Project[] = [
     title: 'SlashBin',
     shortDescription:
       'Voice-activated autonomous smart bin that finds a caller and navigates to them in simulation.',
-    inactiveCallout: 'Simulation demo available',
+    inactiveCallout: 'Video demo available',
     description:
       'Built a ROS 2 autonomous robot simulation that combines voice commands, person detection, omni-wheel control, and Nav2 path planning. SlashBin searches for a person after hearing a wake command, approaches them using RGB-D perception, and returns to its home pose when dismissed.',
     skills: [
@@ -119,8 +119,7 @@ export const projects: Project[] = [
     tech: ['ROS 2', 'Gazebo', 'Nav2', 'C++', 'Python'],
     images: [],
     links: [{ label: 'GitHub', url: 'https://github.com/oogaballooga/SlashBin' }],
-    demoVideo:
-      'https://github.com/oogaballooga/SlashBin/blob/main/media/slashbin_final_demo.mp4',
+    demoVideo: '/projectDocs/SlashBin/slashbin_final_demo.mp4',
     caseStudy: {
       eyebrow: 'ROS 2 · Gazebo · Nav2 · YOLO · Vosk',
       heroSummary:
@@ -157,13 +156,14 @@ export const projects: Project[] = [
       recruiterTakeaway:
         'This project demonstrates that I can connect perception, stateful interaction, motion control, and autonomous navigation into a cohesive robotics system.',
       theme: {
-        background: '#16263A',
-        primary: '#79A9D2',
-        secondary: '#B8D8F0',
-        text: '#EEF7FF',
-        mutedText: '#C6DCEF',
-        panel: '#1C324A',
-        panelAccent: '#365C7D',
+        background: '#172638',
+        primary: '#BEDEFF',
+        secondary: '#BEDEFF',
+        text: '#F3F8FF',
+        mutedText: '#D5E5F5',
+        panel: '#2A405C',
+        panelAccent: '#799EBF',
+        heroImage: '/projectDocs/SlashBin/robot.png',
       },
     },
     activeWidth: 1000,
